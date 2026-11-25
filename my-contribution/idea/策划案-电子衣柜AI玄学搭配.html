@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>电子衣柜 × AI 玄学搭配 · 策划案</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 48px 24px 96px;
+  background: #F7F7FB; color: #1F2328;
+  font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-size: 15px; line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 900px; margin: 0 auto; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.07);
+        border-radius: 16px; padding: 56px 64px 72px; }
+h1 { font-size: 27px; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.3px; color: #16191D; }
+h2 { font-size: 21px; font-weight: 600; margin: 52px 0 16px; padding-bottom: 10px;
+     border-bottom: 1px solid rgba(0,0,0,0.08); color: #16191D; }
+h3 { font-size: 17px; font-weight: 600; margin: 34px 0 12px; color: #27272A; }
+h4 { font-size: 15px; font-weight: 600; margin: 24px 0 10px; color: #3F3F46; }
+p { margin: 12px 0; }
+a { color: #534AB7; }
+strong { font-weight: 600; color: #16191D; }
+hr { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 44px 0; }
+ul, ol { padding-left: 24px; margin: 12px 0; }
+li { margin: 6px 0; }
+li > p { margin: 4px 0; }
+code { background: #F1EFE8; padding: 2px 6px; border-radius: 5px;
+       font-family: "SF Mono", Consolas, "Cascadia Mono", monospace; font-size: 13px; color: #4A1B0C; }
+pre { background: #F7F7FB; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px;
+      padding: 18px 22px; overflow-x: auto; margin: 18px 0; }
+pre code { background: none; padding: 0; color: #26215C; font-size: 13px; line-height: 1.65; }
+blockquote { margin: 18px 0; padding: 14px 20px; background: #FAEEDA; border-left: 3px solid #BA7517;
+             border-radius: 0 10px 10px 0; color: #412402; }
+blockquote p { margin: 6px 0; }
+blockquote strong { color: #412402; }
+table { border-collapse: collapse; width: 100%; margin: 18px 0; font-size: 14px; }
+th { background: #F7F7FB; font-weight: 600; text-align: left; color: #16191D; }
+th, td { border: 1px solid rgba(0,0,0,0.09); padding: 10px 14px; vertical-align: top; }
+tbody tr:nth-child(even) { background: #FCFCFD; }
+em { color: #5F5E5A; font-style: normal; font-size: 13.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>电子衣柜 × AI 玄学搭配</h1>
+<h2>黑客松 48 小时完整策划案</h2>
+<blockquote>
+<p><strong>一句话定位</strong>：一个懂玄学的电子衣柜——拍下你的衣服，让塔罗和心情替你做决定。</p>
+</blockquote>
+<hr />
+<h2>一、为什么是它：差异化定位</h2>
+<p>市面上电子衣柜 App 已经很多（Whering、Acloset、Stylebook、穿衣助手……）。如果定位成「AI 帮你搭衣服」，评委大概率见过同类产品。</p>
+<p><strong>我们的差异点在「决策入口」上。</strong></p>
+<ul>
+<li>传统工具：你想穿什么 → 我帮你搭</li>
+<li>我们：你想不出来 → 塔罗 / 心情 / 幸运色替你做决定</li>
+</ul>
+<p><strong>卖的是选择困难 + 情绪陪伴，不是搭配算法。</strong></p>
+<p>这句话必须在开场 30 秒内讲清楚。讲清楚了，项目就立住了。</p>
+<hr />
+<h2>二、产品逻辑：一个大系统 + 六个小系统</h2>
+<h3>2.1 三层架构</h3>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>名称</th>
+<th>职责</th>
+<th>数据流向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>基座</td>
+<td><strong>电子衣柜（大系统）</strong></td>
+<td>单品存储、拍照上传、AI 识图打标、单品管理</td>
+<td>所有小系统都从这里取数据</td>
+</tr>
+<tr>
+<td>入口</td>
+<td><strong>六个小系统</strong></td>
+<td>塔罗 / 心情 / 天气 / 幸运色 / 颜色 / 盲盒</td>
+<td>各自只负责「把模糊念头翻译成搭配约束」</td>
+</tr>
+<tr>
+<td>大脑</td>
+<td><strong>推荐引擎</strong></td>
+<td>衣柜数据 + 约束条件 → 搭配组合 + 解读文案</td>
+<td>统一处理，不区分入口来源</td>
+</tr>
+</tbody>
+</table>
+<h3>2.2 关键理解：小系统 = 约束生成器</h3>
+<p>六个小系统<strong>不是并列的六个 App</strong>，而是六个「约束生成器」。它们最终都输出<strong>同一种东西</strong>——一个 JSON：</p>
+<pre><code class="language-json">{
+  &quot;occasion&quot;: &quot;日常&quot;,
+  &quot;mood&quot;: &quot;想被治愈&quot;,
+  &quot;must_colors&quot;: [&quot;浅紫&quot;, &quot;奶油白&quot;],
+  &quot;avoid_colors&quot;: [&quot;黑&quot;],
+  &quot;weather&quot;: &quot;18°C 小雨&quot;,
+  &quot;vibe&quot;: &quot;soft / cozy&quot;,
+  &quot;story&quot;: &quot;塔罗·星星正位：今天适合温柔地对待自己&quot;
+}
+</code></pre>
+<p>推荐引擎拿着这个 JSON 去衣橱里筛单品 → 组搭配 → 生成解读。</p>
+<h3>2.3 为什么这样设计</h3>
+<ol>
+<li><strong>开发量骤减</strong>：六个功能 = 一个功能 × 六种输入，引擎只写一遍</li>
+<li><strong>可扩展</strong>：新增第七个入口（星座 / MBTI / 血型）只需写一个约束生成器，引擎完全不用改</li>
+<li><strong>现场好讲</strong>：这个架构本身就是加分项，体现工程判断</li>
+</ol>
+<h3>2.4 六个小系统的实现路径</h3>
+<table>
+<thead>
+<tr>
+<th>小系统</th>
+<th>靠什么实现</th>
+<th>需要外部 API 吗</th>
+<th>我们要自己写什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>塔罗牌</td>
+<td>本地 JSON + 随机抽牌</td>
+<td><strong>不需要</strong></td>
+<td>22 张大阿尔卡纳牌义 + 每张对应的 3–4 个穿搭倾向关键词</td>
+</tr>
+<tr>
+<td>心情</td>
+<td>前端情绪选择器（8 个情绪按钮）</td>
+<td><strong>不需要</strong></td>
+<td>8 种情绪 → 穿搭倾向的映射表</td>
+</tr>
+<tr>
+<td>天气</td>
+<td>天气 API</td>
+<td><strong>需要</strong>（和风天气 / OpenWeatherMap）</td>
+<td>调用逻辑 + 天气 → 温度区间 → 品类过滤规则</td>
+</tr>
+<tr>
+<td>幸运色</td>
+<td>本地算法</td>
+<td><strong>不需要</strong></td>
+<td>按日期 + 星座/生肖推导颜色（算法可简单，重点在仪式感包装）</td>
+</tr>
+<tr>
+<td>颜色</td>
+<td>前端色轮 / 色卡</td>
+<td><strong>不需要</strong></td>
+<td>选定色 → 按主色相似度匹配衣橱单品</td>
+</tr>
+<tr>
+<td>盲盒</td>
+<td>本地随机 + 抽卡动画</td>
+<td><strong>不需要</strong></td>
+<td>随机抽 1 件核心单品，再围绕它补全一套</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论：6 个小系统里只有「天气」真的需要调外部接口，其余 5 个都是本地逻辑 + 内容表。不要在找 API 上浪费时间。</strong></p>
+<h3>2.5 AI 能力只用在哪两处</h3>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>技术方案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上传衣服时看图打标</td>
+<td>多模态大模型：输入图片 → 输出结构化 JSON（品类 / 主色 / 风格 / 季节）</td>
+</tr>
+<tr>
+<td>搭配结果的推荐理由</td>
+<td>文本 LLM：输入约束 JSON + 选中单品 → 输出「为什么这套适合今天的你」</td>
+</tr>
+</tbody>
+</table>
+<p><strong>其余全部用规则实现。</strong> 规则快、稳、不翻车。</p>
+<h3>2.6 技术选型速查</h3>
+<ul>
+<li><strong>识图</strong>：不训模型，直接调多模态大模型看图打标，一次调用搞定</li>
+<li><strong>主色提取</strong>：前端 canvas + ColorThief，几行代码</li>
+<li><strong>天气</strong>：免费 API（和风 / OpenWeatherMap），来不及就硬编码兜底</li>
+<li><strong>塔罗</strong>：22 张牌义手写 JSON，不依赖 AI</li>
+<li><strong>推荐引擎</strong>：规则约束筛候选 + LLM 写解读（先用规则保证搭配靠谱，再让 AI 讲故事）</li>
+<li><strong>结果展示</strong>：拼贴 board，<strong>不做图生图</strong></li>
+</ul>
+<hr />
+<h2>三、48 小时时间倒排</h2>
+<blockquote>
+<p><strong>总体原则</strong>：48 小时不是把 72 小时压缩，而是<strong>砍掉一半功能、把省下的时间全部投给 Demo 表达</strong>。功能只做减法，不做加法。</p>
+</blockquote>
+<h3>Day 1（0–24h）：打通一条完整链路，丑没关系</h3>
+<table>
+<thead>
+<tr>
+<th>时段</th>
+<th>目标</th>
+<th>交付物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–3h</td>
+<td>定方向、冻结需求、搭项目骨架</td>
+<td>P0 清单确认；代码仓库 + 前端框架跑起来</td>
+</tr>
+<tr>
+<td>3–7h</td>
+<td>素材收集 + 单品库搭建</td>
+<td>12–15 张白底单品图 + 打标表</td>
+</tr>
+<tr>
+<td>7–12h</td>
+<td>上传 + AI 识图打通</td>
+<td>传一张图 → 返回结构化标签，能看到结果</td>
+</tr>
+<tr>
+<td>12–17h</td>
+<td>衣柜列表页</td>
+<td>预置单品能正常展示</td>
+</tr>
+<tr>
+<td>17–22h</td>
+<td>第一个玄学入口（塔罗）</td>
+<td>点塔罗 → 抽牌 → 出搭配结果</td>
+</tr>
+<tr>
+<td>22–24h</td>
+<td>复盘 + <strong>强制休息</strong></td>
+<td>写明日任务卡；必须睡，不许通宵</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Day 1 结束标准</strong>：现场拍一件衣服 → 它出现在衣橱里 → 点塔罗能出一套搭配（哪怕丑）。</p>
+<p><strong>强制休息是纪律，不是建议。</strong> 48 小时里通宵一晚，第二天效率会掉一半，得不偿失。</p>
+</blockquote>
+<h3>Day 2（24–48h）：补入口 → 冻结 → 全部投给表达</h3>
+<table>
+<thead>
+<tr>
+<th>时段</th>
+<th>目标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>24–28h</td>
+<td>心情入口 + 天气 API 接入（含硬编码兜底）</td>
+</tr>
+<tr>
+<td>28–30h</td>
+<td>盲盒入口（抽卡动画）——<strong>这是最后一个功能</strong></td>
+</tr>
+<tr>
+<td><strong>30h</strong></td>
+<td><strong>MVP 冻结线，之后禁止新增任何功能</strong></td>
+</tr>
+<tr>
+<td>30–36h</td>
+<td>结果页拼贴 board 打磨、整体视觉统一</td>
+</tr>
+<tr>
+<td>36–40h</td>
+<td>PPT / 落地页制作</td>
+</tr>
+<tr>
+<td>40–44h</td>
+<td>演示脚本定稿 + <strong>第一次完整彩排</strong></td>
+</tr>
+<tr>
+<td>44–46h</td>
+<td>设备调试、网络预案（热点备份）+ <strong>第二次彩排</strong></td>
+</tr>
+<tr>
+<td>46–48h</td>
+<td>提前到场，走一遍完整动线</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>第 30 小时 = 冻结线</strong>（48 小时的 62%）。之后任何人提新功能一律说 No。</p>
+</blockquote>
+<h3>48 小时的功能取舍</h3>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>处置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>塔罗</td>
+<td><strong>P0</strong>，必做</td>
+</tr>
+<tr>
+<td>心情</td>
+<td><strong>P0</strong>，必做</td>
+</tr>
+<tr>
+<td>盲盒</td>
+<td><strong>P1</strong>，第 28–30 小时窗口做，到点没做完立刻砍</td>
+</tr>
+<tr>
+<td>天气</td>
+<td><strong>P1</strong>，接了更好，但必须有硬编码兜底</td>
+</tr>
+<tr>
+<td>幸运色</td>
+<td><strong>P2</strong>，只做 UI 占位</td>
+</tr>
+<tr>
+<td>颜色</td>
+<td><strong>P2</strong>，只做 UI 占位</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>四、三人分工</h2>
+<p><strong>团队构成</strong>：1 名技术 + 2 名文科（含组长）</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>人</th>
+<th>主要负责</th>
+<th>具体交付物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>技术负责人</strong></td>
+<td>同学 A</td>
+<td>全部代码：前端界面、AI 识图接入、推荐引擎、六个小系统逻辑</td>
+<td>可运行的产品 Demo</td>
+</tr>
+<tr>
+<td><strong>内容与产品</strong></td>
+<td>你</td>
+<td>产品定义、六大小系统内容表、单品库素材、页面文案、演示脚本、<strong>守冻结线</strong></td>
+<td>牌义 JSON、情绪映射表、单品库、讲稿</td>
+</tr>
+<tr>
+<td><strong>视觉与叙事</strong></td>
+<td>同学 B</td>
+<td>UI 视觉、结果页拼贴设计、PPT / 落地页、Demo 视频、现场表达</td>
+<td>视觉稿、PPT、演示视频、路演</td>
+</tr>
+</tbody>
+</table>
+<h3>给文科生的两条生存法则</h3>
+<ol>
+<li>
+<p><strong>不写代码，但要把「内容表」写成技术能直接用的格式。</strong>
+   塔罗牌义用 <strong>JSON</strong> 给技术同学，不要给 Word 文档。这是文科生在技术项目里最容易被浪费掉的地方。</p>
+</li>
+<li>
+<p><strong>你负责守住冻结线。</strong>
+   技术同学容易陷入「想把某个功能做完美」，文科生的职责就是把节奏拉回来。<strong>第 30 小时之后，新需求一律拒绝，包括技术同学自己提的。</strong></p>
+</li>
+</ol>
+<h3>人手不足时的补位</h3>
+<ul>
+<li>技术同学忙不过来 → 你（产品）承担前端文案与静态页面</li>
+<li>素材来不及 → 同学 B 承担抠图与视觉统一</li>
+<li><strong>没有人做纯等待的角色。</strong></li>
+</ul>
+<hr />
+<h2>五、风险预案</h2>
+<table>
+<thead>
+<tr>
+<th>风险</th>
+<th>概率</th>
+<th>预案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>识图效果差（照片背景乱）</td>
+<td>高</td>
+<td>Demo 用提前备好的干净照片；识图失败走「手动选标签」兜底</td>
+</tr>
+<tr>
+<td>天气 API 调不通</td>
+<td>中</td>
+<td>硬编码一个天气状态，只影响一个入口，不阻塞主线</td>
+</tr>
+<tr>
+<td><strong>6 个入口做不完</strong></td>
+<td><strong>极高</strong></td>
+<td>48 小时下 P0 只保塔罗 + 心情，其余四个保留完整 UI 的「敬请期待」占位，讲稿里说明是路线图</td>
+</tr>
+<tr>
+<td><strong>有人通宵导致 Day 2 崩盘</strong></td>
+<td>高</td>
+<td>第 22–24 小时强制休息，写进群规；技术同学尤其不能熬夜</td>
+</tr>
+<tr>
+<td>网络 / 设备故障</td>
+<td>中</td>
+<td>手机热点备份 + 提前录 30 秒成功演示视频作最终保底</td>
+</tr>
+<tr>
+<td>评委问「这不就是个搭配 App 吗」</td>
+<td>必问</td>
+<td>准备回答：入口即产品，我们卖的是决策与情绪，不是搭配算法</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>六、Demo 演示脚本（3 分钟）</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0:00–0:30</td>
+<td><strong>痛点开场</strong>：每天站在衣柜前 10 分钟不知道穿什么（一句话 + 一张图）</td>
+</tr>
+<tr>
+<td>0:30–1:00</td>
+<td><strong>定位</strong>：不是又一个搭配工具，是「让玄学替你做决定」</td>
+</tr>
+<tr>
+<td>1:00–1:30</td>
+<td><strong>现场演示①</strong>：拍一件衣服 → 5 秒出现在衣橱（证明真能落地）</td>
+</tr>
+<tr>
+<td>1:30–2:30</td>
+<td><strong>现场演示②</strong>：抽塔罗 → 出搭配 + 解读（哇时刻）</td>
+</tr>
+<tr>
+<td>2:30–3:00</td>
+<td><strong>收尾</strong>：快速带过其余入口 + 技术架构一句话 + 扩展设想</td>
+</tr>
+</tbody>
+</table>
+<h3>哇时刻动线（必须排练到不出错）</h3>
+<p>现场拍一件衣服 → 5 秒后它出现在电子衣柜 → 抽一张塔罗牌 → 出来一套搭配 + 一句解读。</p>
+<p><strong>评委记住的就是这 30 秒。</strong></p>
+<hr />
+<h2>七、三个必须绕开的坑</h2>
+<h3>坑 1：网图素材风格不统一 → Demo 看起来像垃圾</h3>
+<p>方向对，但要用<strong>白底 / 纯色底的单品图</strong>（电商主图或品牌 lookbook 平铺图），<strong>千万别用背景杂乱的生活照</strong>。提前统一抠底，十张图能省两小时。</p>
+<h3>坑 2：想用 AI 生成「上身效果图」→ 效果崩 + 时间黑洞</h3>
+<p><strong>不做图生图。</strong> 改成<strong>拼贴 board</strong>——把选中的单品图按上装 / 下装 / 鞋 / 配饰的配位摆在一块画布上，做成小红书那种 outfit 拼图。</p>
+<p>视觉完全可控、半小时能实现，效果比生成图好十倍。</p>
+<h3>坑 3：功能贪多 → 最后没有一条完整链路能跑</h3>
+<p><strong>在总时长的 60% 处（即第 30 小时）冻结功能</strong>，剩下 18 小时全部用来打磨 Demo 动线和讲稿。这条线要写进群里。</p>
+<hr />
+<h2>八、优先级清单</h2>
+<h3>P0（必须跑通，缺一不可）</h3>
+<ol>
+<li>电子衣柜列表页，预置 8–12 件单品</li>
+<li>拍照 / 上传 → AI 自动打标，现场能真实跑一次</li>
+<li><strong>塔罗 + 心情</strong>两个入口完整可用（一个最有仪式感，一个最贴近用户）</li>
+<li>结果页：拼贴图 + 推荐理由文案</li>
+</ol>
+<blockquote>
+<p><strong>48 小时下 P0 只保两个入口，这是硬约束。</strong> 不要再往里加东西。</p>
+</blockquote>
+<h3>P1（有余力就加，但受第 30 小时冻结线约束）</h3>
+<ul>
+<li>盲盒入口 + 抽卡动画（第 28–30 小时窗口，到点没做完立刻砍）</li>
+<li>天气 API 接入（含硬编码兜底）</li>
+<li>衣橱界面美观度</li>
+</ul>
+<h3>P2（48 小时下直接放弃，仅保留 UI 占位）</h3>
+<ul>
+<li>幸运色、颜色两个入口</li>
+<li>MBTI 测试题（70 题要做 5 分钟，现场必崩；最多做「直接选类型」的 16 按钮版）</li>
+<li>登录注册、社交分享、真实多用户、云端数据库</li>
+</ul>
+<hr />
+<h2>九、外部资源与可复用组件清单</h2>
+<blockquote>
+<p><strong>总原则</strong>：能本地化的全部本地化。<strong>整个产品只保留「天气」一个外部依赖，且必须有兜底。</strong> 现场网络不可靠，接口挂了不能连累主线。</p>
+</blockquote>
+<h3>9.1 A 档：真有现成的，直接接入</h3>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>现成方案</th>
+<th>地址 / 调用方式</th>
+<th>许可证与限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>塔罗牌数据</td>
+<td>Free Horoscope &amp; Tarot API</td>
+<td><code>https://freehoroscopeapi.com/api/v1/tarot/cards/major</code></td>
+<td>免费、无需 key，返回 78 张牌 JSON</td>
+</tr>
+<tr>
+<td>塔罗牌数据（备选）</td>
+<td>GitHub <code>krates98/tarotcardapi</code></td>
+<td><code>github.com/krates98/tarotcardapi</code></td>
+<td>MIT，78 张牌 + 高清图 + 牌义，需自行部署 Node 服务</td>
+</tr>
+<tr>
+<td><strong>塔罗牌面图</strong></td>
+<td>Rider-Waite 1909 原版扫描</td>
+<td>Wikimedia Commons 搜 "Rider-Waite tarot deck"</td>
+<td><strong>已进入公有领域，无版权风险</strong>，可直接下载</td>
+</tr>
+<tr>
+<td><strong>天气（首选）</strong></td>
+<td>wttr.in</td>
+<td><code>https://wttr.in/西安?format=j1</code></td>
+<td><strong>零注册零 key</strong>，支持中文，返回 JSON</td>
+</tr>
+<tr>
+<td>天气（备选）</td>
+<td>Open-Meteo</td>
+<td><code>https://api.open-meteo.com/v1/forecast?latitude=34.34&amp;longitude=108.94&amp;current=temperature_2m,weather_code</code></td>
+<td>无需 key，每日约 1 万次</td>
+</tr>
+<tr>
+<td>天气（备选）</td>
+<td>和风天气</td>
+<td><code>https://devapi.qweather.com/v7/weather/now?location=101110100&amp;key=KEY</code></td>
+<td>需注册，免费版每天 1000 次</td>
+</tr>
+<tr>
+<td>MBTI 题库</td>
+<td>GitHub 开源题库</td>
+<td>如 <code>github.com/WifeLike/mbti-test</code> 中的 <code>questions_standard_mbti_93.json</code></td>
+<td>标准 93 题 JSON，直接可用</td>
+</tr>
+<tr>
+<td>MBTI 工具</td>
+<td><code>mbti-mcp</code></td>
+<td><code>github.com/wenyili/mbti-mcp</code></td>
+<td>MIT，含简化版 28 题 / 认知功能版 48 题</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>城市代码备忘：wttr.in 直接用中文城市名即可；和风天气西安 = <code>101110100</code>。</p>
+</blockquote>
+<h3>9.2 B 档：不是 API，但拿来即用</h3>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>方案</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>盲盒抽卡动画</td>
+<td>LottieFiles 免费开箱 / 抽卡动画</td>
+<td>导出 JSON，用 lottie-web 播放，比手写 CSS 动画快得多</td>
+</tr>
+<tr>
+<td>抽卡音效</td>
+<td>爱给网 / freesound.org</td>
+<td>选 CC0 授权素材</td>
+</tr>
+<tr>
+<td>图片抠底</td>
+<td><code>rembg</code>（Python 开源包）</td>
+<td>本地跑，免费无限次，<code>pip install rembg</code></td>
+</tr>
+<tr>
+<td>图片抠底（备选）</td>
+<td><code>withoutbg</code></td>
+<td>开源，<code>pip install withoutbg</code>，一行调用</td>
+</tr>
+<tr>
+<td>主色提取</td>
+<td>chroma.js / ColorThief</td>
+<td>前端几行代码，canvas 取样</td>
+</tr>
+<tr>
+<td>中国传统色卡</td>
+<td>GitHub <code>zhongguose</code> 等开源 JSON</td>
+<td>给「幸运色」配上有质感的色名</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>抠图避坑</strong>：remove.bg 免费版只输出 0.25MP 预览图，做 Demo 完全不够用，<strong>不要选它</strong>，用 rembg 本地跑。</p>
+</blockquote>
+<h3>9.3 C 档：没有现成的，必须自己写（别去找了）</h3>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>为什么没有</th>
+<th>工作量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>幸运色算法</td>
+<td>「每日幸运色」是星座类 App 自己运营编的内容，无权威数据源，也无 API</td>
+<td>日期 hash → 色环角度，一个函数；配文案半天</td>
+</tr>
+<tr>
+<td>心情 → 穿搭倾向</td>
+<td>完全是你产品的私有知识</td>
+<td>8 行映射表</td>
+</tr>
+<tr>
+<td>颜色 → 单品匹配</td>
+<td>依赖你自己的单品库标签</td>
+<td>按主色相似度排序，约 20 行代码</td>
+</tr>
+<tr>
+<td>搭配推荐逻辑</td>
+<td>依赖你的单品库 + 标签体系</td>
+<td>规则约 50 行 + LLM 提示词</td>
+</tr>
+</tbody>
+</table>
+<h3>9.4 分工对应表（谁去找、谁去用）</h3>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>谁负责获取</th>
+<th>交付形式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>塔罗牌面图 22 张</td>
+<td>同学 B（视觉）</td>
+<td>下载后按 <code>00-愚者.png</code> 规则命名，放进项目 assets 目录</td>
+</tr>
+<tr>
+<td>塔罗牌义 + 穿搭倾向</td>
+<td>你（内容）</td>
+<td><code>tarot.json</code>，22 条，每条含牌名 / 关键词 / 穿搭倾向 / 一句解读</td>
+</tr>
+<tr>
+<td>心情 → 穿搭映射表</td>
+<td>你（内容）</td>
+<td><code>mood.json</code>，8 条</td>
+</tr>
+<tr>
+<td>MBTI 16 型穿搭倾向</td>
+<td>你（内容）</td>
+<td><code>mbti.json</code>，16 条</td>
+</tr>
+<tr>
+<td>单品图 + 抠底</td>
+<td>同学 B（视觉）</td>
+<td>12–15 张白底 PNG，编号 + 打标表</td>
+</tr>
+<tr>
+<td>天气接口</td>
+<td>同学 A（技术）</td>
+<td>接 wttr.in，内置硬编码兜底</td>
+</tr>
+<tr>
+<td>抽卡动画 + 音效</td>
+<td>同学 B（视觉）</td>
+<td>Lottie JSON + mp3</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>给技术同学的一句话</strong>：以上资源里只有「天气」需要联网调用，其余全部下载到本地。<strong>即使现场断网，主线 Demo 依然完整可跑。</strong></p>
+</blockquote>
+<h3>9.5 两个必须记住的提醒</h3>
+<p><strong>1. MBTI 不要做成测试题。</strong>
+70 题试卷用户要答 5 分钟，现场一定崩。入口页只放 16 个字母按钮让用户直接选类型，2 秒点完。</p>
+<p><strong>2. 塔罗真正要接的不是 API，是图片。</strong>
+抽牌逻辑自己写 3 行随机数就行，牌义自己写反而更贴穿搭场景。下载 22 张公有领域牌面图存本地即可。</p>
+<hr />
+<p><em>策划案 v1.2 · 2026-09-23（时间调整为 48 小时）</em></p>
+</div>
+</body>
+</html>

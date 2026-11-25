@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="易搭 YIDA 项目导航与在线预览：电子衣橱 × 穿搭灵感，2026-11-21 最新版本">
+<title>易搭 YIDA · 项目导航与在线预览</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2315120e'/%3E%3Ctext x='50' y='70' font-size='58' text-anchor='middle' fill='%23d6b978'%3E易%3C/text%3E%3C/svg%3E">
+<style>
+  :root{--bg:#0d0b12;--card:rgba(255,255,255,.045);--line:rgba(214,185,120,.22);--gold:#d6b978;--ink:#f4eee6;--muted:#b3a99a}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background-image:radial-gradient(1px 1px at 12% 18%,rgba(214,185,120,.7) 99%,transparent),
+      radial-gradient(1px 1px at 28% 62%,rgba(255,255,255,.5) 99%,transparent),
+      radial-gradient(1.5px 1.5px at 68% 22%,rgba(214,185,120,.6) 99%,transparent),
+      radial-gradient(1px 1px at 82% 72%,rgba(255,255,255,.45) 99%,transparent),
+      radial-gradient(2px 2px at 48% 8%,rgba(214,185,120,.35) 99%,transparent),
+      radial-gradient(ellipse at 80% 0%,rgba(120,86,40,.22),transparent 55%),
+      radial-gradient(ellipse at 0% 90%,rgba(70,52,96,.18),transparent 55%);}
+  .wrap{max-width:920px;margin:0 auto;padding:56px 22px 72px}
+  .eyebrow{letter-spacing:.32em;font-size:11px;color:var(--gold);margin:0 0 18px;text-transform:uppercase}
+  .badge{display:inline-block;padding:7px 14px;border:1px solid var(--line);border-radius:999px;
+    background:rgba(214,185,120,.08);color:var(--gold);font-size:12px;font-weight:600;margin-bottom:20px}
+  h1{font-size:clamp(38px,7vw,64px);line-height:1.1;margin:0 0 12px;font-weight:700;letter-spacing:.04em}
+  h1 em{font-style:normal;color:var(--gold);font-weight:400;letter-spacing:.16em}
+  .lead{font-size:clamp(16px,2.4vw,21px);color:var(--ink);margin:0 0 10px}
+  .desc{color:var(--muted);line-height:1.85;font-size:14px;max-width:680px;margin:0 0 30px}
+  .cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:12px;
+    border:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:14px;font-weight:600;
+    background:var(--card);transition:transform .15s ease,background .15s ease}
+  .btn:hover{transform:translateY(-2px);background:rgba(214,185,120,.14)}
+  .btn.primary{background:linear-gradient(135deg,#d6b978,#a9813f);color:#1a140c;border-color:transparent}
+  .btn.primary:hover{background:linear-gradient(135deg,#e6c98c,#b98f49)}
+  .note{border-left:2px solid var(--gold);background:var(--card);padding:14px 18px;border-radius:0 10px 10px 0;
+    color:var(--muted);font-size:13px;line-height:1.8;margin-bottom:44px}
+  .note b{color:var(--ink)}
+  h2{font-size:19px;margin:0 0 18px;letter-spacing:.06em}
+  h2 span{color:var(--gold);font-size:12px;letter-spacing:.18em;margin-right:10px}
+  section{margin-bottom:46px}
+  .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .shots figure{margin:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .shots img{display:block;width:100%;height:auto;aspect-ratio:9/16;object-fit:cover;object-position:top}
+  .shots figcaption{padding:9px 12px;font-size:12px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{padding:13px 14px;text-align:left;border-bottom:1px solid rgba(255,255,255,.06);line-height:1.6}
+  th{color:var(--gold);font-weight:600;font-size:12px;letter-spacing:.06em}
+  tr:last-child td{border-bottom:0}
+  .ok{color:#8fd6a4;font-weight:600;white-space:nowrap}
+  .arch{color:var(--muted);white-space:nowrap}
+  .links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .links a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);
+    color:var(--ink);text-decoration:none;font-size:14px;line-height:1.6}
+  .links a small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+  .links a:hover{border-color:var(--gold);background:rgba(214,185,120,.08)}
+  footer{border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:12px;line-height:1.9}
+  footer a{color:var(--gold);text-decoration:none}
+  @media(max-width:640px){.wrap{padding:36px 16px 56px}.shots{grid-template-columns:repeat(2,1fr)}.links{grid-template-columns:1fr}.btn{width:100%;justify-content:center}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="eyebrow">YIDA · PROJECT NAVIGATION</p>
+  <div class="badge">✅ 最新版本 · 2026-11-21 · 当前维护</div>
+  <h1>易搭 <em>YIDA</em></h1>
+  <p class="lead">电子衣橱 × 穿搭灵感 · 本地优先的移动端应用</p>
+  <p class="desc">五种玩法收集当日状态，规则引擎从衣橱组合出 4 套搭配，一键确认进历史与海报；另有微博式广场与个人主页。无构建工具、无后端依赖，数据只留在本机浏览器。</p>
+
+  <div class="cta">
+    <a class="btn primary" href="./frontend/index.html">▶ 在线打开 App</a>
+    <a class="btn" href="https://github.com/ccccongggg/yida-wardrobe">查看源码与工程说明</a>
+    <a class="btn" href="https://github.com/ccccongggg/yida-wardrobe/blob/main/docs/RESUME.md">简历版说明</a>
+  </div>
+
+  <div class="note">
+    <b>预览须知</b>：这是纯前端静态展示版，无账号、无云端调用，建议用手机或浏览器设备模式（390 × 844）。<br>
+    「我的衣橱 → 添加衣物」会走<b>本机降级</b>（不抠图、保留原背景、标签手动核对），页面会明确提示——<b>这是设计行为，不是故障</b>。发布签名、keystore 与服务端能力不在公开范围。
+  </div>
+
+  <section>
+    <h2><span>01</span>效果预览</h2>
+    <div class="shots">
+      <figure><img src="./docs/screenshots/home.jpg" alt="易搭首页"><figcaption>V8 金色夜空 · 五玩法首页</figcaption></figure>
+      <figure><img src="./docs/screenshots/plaza.jpg" alt="广场"><figcaption>微博式广场 · 互动动态</figcaption></figure>
+      <figure><img src="./docs/screenshots/results.jpg" alt="搭配结果"><figcaption>4 套搭配结果页</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2><span>02</span>版本状态（哪个是最新的）</h2>
+    <table>
+      <thead><tr><th>目录 / 内容</th><th>项目</th><th>状态</th><th>最后更新</th></tr></thead>
+      <tbody>
+        <tr><td><b>根目录 `frontend/` · `android/` · `docs/`</b></td><td>易搭 YIDA（本页预览的成品）</td><td class="ok">✅ 最新 · 当前维护</td><td>2026-11-21</td></tr>
+        <tr><td>git 历史 `2154cff` 及之前</td><td>易搭整合版 1.0（v1 历史快照）</td><td class="arch">🗄 历史归档</td><td>2026-11-10</td></tr>
+        <tr><td>`archive/outfit-mystic/`</td><td>outfit-mystic 黑客松版本（v0）</td><td class="arch">🗄 归档 · 不再维护</td><td>2026-11-11</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2><span>03</span>更多入口</h2>
+    <div class="links">
+      <a href="https://github.com/ccccongggg/yida-wardrobe/blob/main/docs/ENGINEERING.md">工程介绍 README<small>功能表 / 架构图 / 6 条量化亮点</small></a>
+      <a href="https://github.com/ccccongggg/yida-wardrobe/blob/main/PREVIEW.md">完整预览指南<small>在线 / 双击 / 静态服务 / 安卓端 / 体验路线 / FAQ</small></a>
+      <a href="https://github.com/ccccongggg/yida-wardrobe/blob/main/docs/RESUME.md">简历可复制文案<small>项目描述 / bullet / 60 秒口述 / 数字速查</small></a>
+      <a href="https://github.com/ccccongggg/yida-wardrobe/blob/main/docs/architecture.svg">前端架构图<small>入口 → 玩法 → 引擎 → 数据 → 端侧</small></a>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 Cong · 本页为<b>作品展示快照</b>，非正式发布版本；演示素材仅用于效果展示，未声明商用授权。<br>
+    仓库：<a href="https://github.com/ccccongggg/yida-wardrobe">github.com/ccccongggg/yida-wardrobe</a>
+  </footer>
+</main>
+</body>
+</html>

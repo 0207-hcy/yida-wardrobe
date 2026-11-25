@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>电子衣柜 · 界面原型 Demo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#F2F2F7;font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1F2328;-webkit-font-smoothing:antialiased;padding:32px 20px 64px}
+.page{max-width:1080px;margin:0 auto;display:flex;gap:40px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.title-block{flex:1 1 260px;min-width:240px;max-width:300px;padding-top:8px}
+.title-block h1{font-size:19px;font-weight:600;margin-bottom:8px;letter-spacing:-.2px}
+.title-block .sub{font-size:13px;color:#6B7280;line-height:1.7;margin-bottom:24px}
+.legend{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:14px;padding:16px 18px}
+.legend h2{font-size:13px;font-weight:600;margin-bottom:12px;color:#374151}
+.legend-item{display:flex;gap:10px;padding:9px 0;border-top:1px solid rgba(0,0,0,.05)}
+.legend-item:first-of-type{border-top:none}
+.dot{width:8px;height:8px;border-radius:50%;flex:none;margin-top:6px}
+.legend-item .k{font-size:13px;font-weight:600;margin-bottom:2px}
+.legend-item .v{font-size:12px;color:#6B7280;line-height:1.6}
+.phone{width:390px;height:800px;background:#fff;border-radius:34px;border:1px solid rgba(0,0,0,.09);box-shadow:0 12px 40px rgba(20,20,45,.10);position:relative;overflow:hidden;flex:none;display:flex;flex-direction:column}
+.statusbar{height:34px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:11px;color:#8A8A93;font-weight:600}
+.navbar{height:46px;flex:none;display:flex;align-items:center;gap:10px;padding:0 18px;border-bottom:1px solid rgba(0,0,0,.05)}
+.navbar .back{width:26px;height:26px;border-radius:50%;background:#F2F2F7;display:flex;align-items:center;justify-content:center;font-size:14px;color:#6B7280;cursor:pointer;border:none;font-family:inherit;flex:none}
+.navbar .back:hover{background:#E7E7ED}
+.navbar .ttl{font-size:14px;font-weight:600}
+.stage{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 18px 28px;position:relative}
+.stage::-webkit-scrollbar{width:0}
+.screen{display:none}
+.screen.on{display:block}
+.screen.on.slide-r{animation:slideR .28s cubic-bezier(.22,.61,.36,1)}
+.screen.on.slide-l{animation:slideL .28s cubic-bezier(.22,.61,.36,1)}
+@keyframes slideR{from{transform:translateX(32%);opacity:.2}to{transform:none;opacity:1}}
+@keyframes slideL{from{transform:translateX(-32%);opacity:.2}to{transform:none;opacity:1}}
+.h2{font-size:17px;font-weight:600;letter-spacing:-.2px}
+.h2sub{font-size:12.5px;color:#8A8A93;margin-top:5px;line-height:1.6}
+.btn{display:block;width:100%;padding:14px;border-radius:13px;border:none;background:#6D5BD0;color:#fff;font-size:14.5px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:22px}
+.btn:hover{background:#5D4BC0}
+.btn.ghost{background:#F2F2F7;color:#4B5563}
+.btn.ghost:hover{background:#E7E7ED}
+
+/* wardrobe */
+.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.witem{background:#FAFAFC;border:1px solid rgba(0,0,0,.05);border-radius:13px;padding:8px;text-align:center}
+.witem .thumb{height:62px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:7px}
+.witem .nm{font-size:10.5px;color:#4B5563;line-height:1.35}
+.witem .ct{font-size:9.5px;color:#A1A1AA;margin-top:2px}
+.count-pill{display:inline-block;background:#EEEDFE;color:#534AB7;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:10px}
+
+/* ===== 衣柜式入口页（第一屏） ===== */
+.wchip{display:inline-flex;align-items:center;gap:6px;background:#E6F1FB;color:#185FA5;font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;margin-top:13px}
+.wbox{position:relative;overflow:hidden;background:#FAF9F6;border:1px solid rgba(0,0,0,.055);border-radius:16px;margin-top:14px;padding-bottom:13px}
+.rail{position:absolute;top:38px;left:16px;right:16px;height:3px;background:#C9C7BE;border-radius:2px;z-index:0}
+.rail:before,.rail:after{content:'';position:absolute;top:-7px;width:6px;height:17px;background:#BCBAB1;border-radius:2px}
+.rail:before{left:-3px}
+.rail:after{right:-3px}
+.hstrip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:pan-x pan-y}
+.hstrip::-webkit-scrollbar{display:none}
+.hstrip.grabbing{cursor:grabbing}
+.hspacer{flex:0 0 calc(50% - 50px)}
+.hslot{position:relative;z-index:1;flex:0 0 100px;height:132px;scroll-snap-align:center;cursor:pointer;opacity:.4;transform:scale(.84);transform-origin:50% 34%;transition:opacity .22s ease,transform .22s ease}
+.hslot svg{display:block;width:100%;height:132px;-webkit-user-drag:none}
+.hslot.focus{opacity:1;transform:scale(1)}
+.hslot.focus.off{opacity:.62}
+.hinfo{text-align:center;margin-top:16px;min-height:56px}
+.hinfo .hn{font-size:15.5px;font-weight:600;letter-spacing:-.2px}
+.hinfo .hd{font-size:11.5px;color:#8A8A93;margin-top:5px;line-height:1.6;padding:0 12px}
+.hbadge{display:inline-block;font-size:10px;font-weight:700;padding:2.5px 9px;border-radius:20px;margin-top:8px;letter-spacing:.2px}
+.hdots{display:flex;justify-content:center;gap:5px;margin-top:14px;height:6px}
+.hdots i{width:5px;height:5px;border-radius:50%;background:#DCDCE3;display:block;transition:all .22s ease}
+.hdots i.on{background:#6D5BD0;width:15px;border-radius:3px}
+.navbtn{margin-left:auto;font-size:11px;font-weight:600;color:#534AB7;background:#EEEDFE;border:none;border-radius:20px;padding:5px 11px;cursor:pointer;font-family:inherit;visibility:hidden}
+
+/* entries */
+.grp{margin-top:22px}
+.grp-h{font-size:11.5px;font-weight:700;color:#8A8A93;letter-spacing:.4px;margin-bottom:9px}
+.grp-h span{font-weight:400;letter-spacing:0}
+.egrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.entry{border-radius:14px;padding:13px 12px;cursor:pointer;border:1px solid;text-align:left;font-family:inherit;position:relative;transition:transform .12s}
+.entry:hover{transform:translateY(-1px)}
+.entry:active{transform:none}
+.entry .en{font-size:13.5px;font-weight:600;margin-bottom:3px}
+.entry .ed{font-size:10.5px;line-height:1.45;opacity:.78}
+.entry .tag{position:absolute;top:9px;right:10px;font-size:9px;font-weight:700;opacity:.5}
+.entry.off{opacity:.42;cursor:not-allowed;filter:grayscale(.4)}
+.entry.off:hover{transform:none}
+
+/* energy */
+.big-num{font-size:62px;font-weight:600;letter-spacing:-2px;text-align:center;margin:26px 0 2px;color:#6D5BD0}
+.big-unit{font-size:16px;font-weight:500;color:#A1A1AA;margin-left:3px}
+.state-txt{text-align:center;font-size:13.5px;color:#4B5563;line-height:1.6;min-height:44px;padding:0 10px}
+.slabel{display:flex;justify-content:space-between;font-size:11px;color:#A1A1AA;margin-top:26px;margin-bottom:8px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:10px;border-radius:6px;background:linear-gradient(90deg,#6D5BD0 var(--pct,62%),#EDEDF2 var(--pct,62%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid #6D5BD0;margin-top:-10px;box-shadow:0 1px 5px rgba(0,0,0,.16)}
+input[type=range]::-moz-range-track{height:10px;border-radius:6px;background:linear-gradient(90deg,#6D5BD0 var(--pct,62%),#EDEDF2 var(--pct,62%))}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid #6D5BD0}
+
+/* home —— 4 个入口直达（不再有抽取式/调节式这层壳） */
+.eboard{display:flex;align-items:center;gap:14px;width:100%;padding:15px 16px;border-radius:16px;border:1.5px solid;margin-bottom:11px;cursor:pointer;font-family:inherit;text-align:left;transition:transform .14s ease,box-shadow .2s ease}
+.eboard:active{transform:scale(.985)}
+.eboard .ebi{width:54px;height:54px;border-radius:14px;flex:none;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.7)}
+.eboard .ebt{flex:1;min-width:0}
+.eboard .ebn{display:block;font-size:15px;font-weight:700;margin-bottom:3px}
+.eboard .ebd{display:block;font-size:11.5px;line-height:1.5;opacity:.78}
+.eboard .ebgo{font-size:20px;opacity:.45;flex:none;font-weight:600}
+
+/* 社交电量：颜色块随电量前后移动 */
+.soc-wrap{margin-top:24px;padding:0 2px}
+.soc-ends{display:flex;justify-content:space-between;font-size:11px;color:#A1A1AA;margin-bottom:9px}
+.soc-bar{position:relative;height:24px;border-radius:12px;background:#EFECF4;touch-action:none;cursor:pointer}
+.soc-fill{position:absolute;left:0;top:0;bottom:0;width:62%;border-radius:12px;background:#D98BB4;transition:width .1s linear,background .25s ease}
+.soc-knob{position:absolute;top:50%;left:62%;width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid #D4537E;transform:translate(-50%,-50%);box-shadow:0 1px 6px rgba(0,0,0,.18);transition:left .1s linear,border-color .25s ease;pointer-events:none}
+
+/* identity */
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}
+.ident{border-radius:16px;padding:18px 14px;text-align:left;cursor:pointer;border:1.5px solid rgba(0,0,0,.07);background:#FAFAFC;font-family:inherit;transition:all .15s}
+.ident:hover{border-color:rgba(109,91,208,.4)}
+.ident.sel{border-color:#6D5BD0;background:#F3F1FE}
+.ident .ie{font-size:22px;margin-bottom:9px;display:block}
+.ident .in{font-size:14px;font-weight:600;margin-bottom:5px}
+.ident .id_{font-size:10.5px;color:#8A8A93;line-height:1.5}
+
+/* tarot —— 单屏抽牌：圆形放射牌轮（参考 Quin 参考图）+ 独立解读屏 */
+.r-prog{font-size:11.5px;color:#7F77DD;font-weight:600;text-align:center;margin:0 0 6px}
+.r-prog b{color:#403890;font-size:14px}
+.rzone{position:relative;height:364px;margin-top:4px;overflow:hidden;touch-action:none;cursor:grab;border-radius:22px;background:#141130}
+.rzone.drag{cursor:grabbing}
+.rcard{position:absolute;left:50%;top:50%;width:30px;height:156px;margin-left:-15px;margin-top:-156px;transform-origin:50% 100%;border-radius:8px 8px 5px 5px;background:linear-gradient(180deg,#4A4196,#332C78);border:1px solid #5B52B8;box-shadow:0 2px 9px rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:6px 0 3px;will-change:transform}
+.rcard i{color:#C6C1EB;font-size:12px;font-style:normal}
+.rcard b{font-size:8px;color:#9189C6;font-weight:700;letter-spacing:.3px}
+.rcard.pick{outline:2.5px solid #FFC861;outline-offset:1px;box-shadow:0 0 22px rgba(255,180,60,.6);z-index:20}
+.rcard.taken{opacity:.12}
+.r-hole{position:absolute;left:50%;top:50%;width:104px;height:104px;margin-left:-52px;margin-top:-52px;border-radius:50%;background:#141130;box-shadow:0 0 0 1px rgba(140,128,220,.2);z-index:10}
+.r-idx{position:absolute;left:50%;top:6px;transform:translateX(-50%);z-index:30;display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none}
+.r-idx .dot{width:8px;height:8px;border-radius:50%;background:#FFC861;box-shadow:0 0 12px #FFC861}
+.r-idx .lab{font-size:12px;font-weight:700;color:#FFC861;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+/* 解读屏 */
+.t-read{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:15px;padding:13px;margin-bottom:10px;display:flex;gap:12px;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease}
+.t-read.on{opacity:1;transform:none}
+.t-rface{width:56px;height:90px;border-radius:9px;background:linear-gradient(160deg,#4A4196,#332C78);border:1px solid #5B52B8;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#D7D3F2;box-shadow:0 4px 12px rgba(35,30,80,.25)}
+.t-rface .rno{font-size:10px;letter-spacing:1px;color:#B9B4E0}
+.t-rface .rnm{font-size:13px;font-weight:700;margin-top:3px;color:#EFEDFB}
+.t-rbody{flex:1;min-width:0}
+.t-rrole{font-size:10px;font-weight:700;color:#7F77DD;letter-spacing:.5px;margin-bottom:5px}
+.t-rtext{font-size:13px;line-height:1.62;color:#26215C}
+.t-fin{margin-top:2px;background:#FAEEDA;border-left:3px solid #BA7517;border-radius:0 12px 12px 0;padding:14px 15px;font-size:13px;line-height:1.72;color:#412402}
+.t-fin .ft{font-size:10px;font-weight:700;color:#BA7517;letter-spacing:.6px;margin-bottom:6px}
+.t-fin b{font-weight:700}
+
+/* scratch */
+.sc-wrap{position:relative;width:100%;height:150px;border-radius:14px;overflow:hidden;margin-top:20px;border:1px solid rgba(0,0,0,.07)}
+.sc-under{position:absolute;inset:0;background:#FAFAFC;display:flex;align-items:center;justify-content:center;gap:14px}
+.sc-under .pw{width:52px;height:72px;border-radius:9px}
+.sc-canvas{position:absolute;inset:0;cursor:crosshair;touch-action:none}
+.sc-hint{text-align:center;font-size:11.5px;color:#A1A1AA;margin-top:10px}
+
+/* result */
+.cons{background:#F3F1FE;border-radius:12px;padding:11px 14px;font-size:11.5px;color:#534AB7;line-height:1.6;margin-bottom:18px}
+.cons b{font-weight:600}
+.outfit{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.oitem{border-radius:14px;padding:12px;position:relative;overflow:hidden;text-align:center}
+.oitem .oit{height:64px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.oitem .onm{font-size:11px;color:#fff;font-weight:600;line-height:1.4;text-shadow:0 1px 2px rgba(0,0,0,.18)}
+.oitem .oslot{position:absolute;top:8px;left:9px;font-size:8.5px;color:rgba(255,255,255,.85);font-weight:700;letter-spacing:.5px}
+.rvcard{margin-top:18px;background:#FBEAF0;border-radius:14px;padding:16px;border:1px solid rgba(212,83,126,.18)}
+.rvcard .rq{font-size:10.5px;font-weight:700;color:#993556;letter-spacing:.5px;margin-bottom:8px}
+.rvcard .rt{font-size:14px;line-height:1.75;color:#4B1528}
+.row2{display:flex;gap:10px}
+.row2 .btn{flex:1}
+
+/* ===== 抽屉导航 ===== */
+.hamb{width:26px;height:26px;flex:none;border:none;border-radius:8px;background:#F2F2F7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.5px;cursor:pointer;padding:0}
+.hamb i{display:block;width:12px;height:1.6px;background:#4B5563;border-radius:1px}
+.hamb:hover{background:#E7E7ED}
+.mask{position:absolute;inset:0;background:rgba(20,20,35,.32);opacity:0;pointer-events:none;transition:opacity .24s ease;z-index:40}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{position:absolute;top:0;left:0;bottom:0;width:232px;background:#fff;z-index:41;transform:translateX(-100%);transition:transform .28s cubic-bezier(.3,.8,.3,1);display:flex;flex-direction:column;box-shadow:2px 0 22px rgba(20,20,45,.10)}
+.drawer.on{transform:none}
+.dhd{padding:46px 18px 15px;border-bottom:1px solid rgba(0,0,0,.05)}
+.dhd .dh1{font-size:16px;font-weight:600;letter-spacing:-.2px}
+.dhd .dh2{font-size:11px;color:#A1A1AA;margin-top:4px}
+.dnav{padding:10px 10px 0}
+.ditem{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:none;background:transparent;font-family:inherit;padding:11px 11px;border-radius:12px;cursor:pointer;margin-bottom:2px;transition:background .15s}
+.ditem:hover{background:#F7F7FA}
+.ditem.on{background:#EEEDFE}
+.ditem .dic{width:26px;height:26px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;background:#F2F2F7}
+.ditem.on .dic{background:#fff}
+.ditem .dtx{font-size:13.5px;font-weight:500;color:#2C2C2A;line-height:1.25}
+.ditem.on .dtx{color:#26215C;font-weight:600}
+.ditem .dds{display:block;font-size:10px;color:#A1A1AA;font-weight:400;margin-top:2px}
+.ditem .dtag{margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#FAEEDA;color:#854F0B}
+.dft{margin-top:auto;padding:14px 18px 0;font-size:10px;color:#C4C4CC;line-height:1.65;border-top:1px solid rgba(0,0,0,.05)}
+
+/* ===== 板块页（二级） ===== */
+.btop{border-radius:16px;padding:15px 16px;border:1px solid;margin-top:16px}
+.btop .btt{font-size:15.5px;font-weight:600;letter-spacing:-.2px}
+.btop .bts{font-size:11.5px;line-height:1.6;margin-top:5px;opacity:.78}
+.bhow{display:inline-block;margin-top:11px;font-size:10px;font-weight:700;letter-spacing:.3px;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.72)}
+
+/* ===== 输入式：命令栏 ===== */
+.omb{display:flex;align-items:center;gap:9px;background:#FAFAFC;border:1.5px solid #BA7517;border-radius:24px;padding:11px 15px;margin-top:14px}
+.omb .lico{width:11px;height:11px;border:1.6px solid #BA7517;border-radius:50%;flex:none;position:relative}
+.omb .lico:after{content:'';position:absolute;left:8px;top:8px;width:5px;height:1.6px;background:#BA7517;border-radius:1px;transform:rotate(45deg)}
+.omb input{flex:1;min-width:0;border:none;background:transparent;outline:none;font-family:inherit;font-size:13.5px;color:#2C2C2A;padding:0}
+.omb input::placeholder{color:#C4C4CC}
+.sug{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.sug b{font-size:11.5px;font-weight:500;padding:5px 11px;border-radius:20px;background:#FAEEDA;color:#854F0B;cursor:pointer}
+.sug b:hover{background:#FAC775}
+.mblock{margin-top:20px}
+.mlab{font-size:10px;font-weight:700;color:#A1A1AA;letter-spacing:.4px;margin-bottom:9px}
+.mchips{display:flex;flex-wrap:wrap;gap:7px}
+.mchip{font-size:11.5px;padding:5px 11px;border-radius:20px;font-weight:600}
+.mres{border:1px solid rgba(0,0,0,.07);border-radius:13px;padding:12px 13px;margin-bottom:9px;background:#fff;cursor:pointer;transition:transform .12s}
+.mres:hover{transform:translateY(-1px)}
+.mres .mrt{font-size:12.5px;font-weight:600}
+.mres .mrs{font-size:10.5px;color:#8A8A93;margin-top:4px;line-height:1.55}
+.mres.hl{border-color:#BA7517;background:#FEFAF2}
+.mempty{text-align:center;font-size:11.5px;color:#C4C4CC;padding:24px 0;line-height:1.7}
+
+/* ===== 广场 ===== */
+.seg{display:flex;gap:5px;background:#F2F2F7;border-radius:11px;padding:3px;margin-bottom:16px}
+.seg button{flex:1;border:none;background:transparent;font-family:inherit;font-size:12px;font-weight:600;color:#8A8A93;padding:8px 0;border-radius:9px;cursor:pointer}
+.seg button.on{background:#fff;color:#2C2C2A}
+.pcard{border:1px solid rgba(0,0,0,.07);border-radius:16px;padding:14px;margin-bottom:12px;background:#fff}
+.phead{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.pav{width:32px;height:32px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.pnm{font-size:12.5px;font-weight:600}
+.ptm{font-size:10px;color:#A1A1AA;margin-top:1px}
+.pbadge{margin-left:auto;font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px}
+.pshot{display:flex;gap:7px;margin-bottom:11px}
+.pshot .pimg{flex:1;height:54px;border-radius:10px}
+.pcap{font-size:12.5px;line-height:1.65;color:#3F3F46}
+.pmeta{display:flex;align-items:center;gap:15px;margin-top:11px;font-size:11px;color:#8A8A93}
+.pmeta b{font-weight:500;cursor:pointer}
+.pmeta b:hover{color:#6D5BD0}
+
+/* ===== 抽屉分级：拿主意是正门，另两项从属 ===== */
+.ditem.hero{padding:16px 13px;border-radius:14px;background:#EEEDFE}
+.ditem.hero .dic{width:34px;height:34px;border-radius:10px;background:#fff}
+.ditem.hero .dtx{font-size:16px;font-weight:600;color:#26215C}
+.ditem.hero .dds{font-size:10.5px;color:#534AB7;margin-top:3px}
+.ditem.hero:not(.on){background:#F4F3FE}
+.dsep{height:1px;background:rgba(0,0,0,.06);margin:12px 4px 10px}
+.dlab{font-size:9.5px;font-weight:700;color:#B4B2A9;letter-spacing:.6px;padding:0 13px 6px}
+.ditem.sub .dtx{font-size:12.5px;font-weight:500;color:#8A8A93}
+.ditem.sub .dic{width:22px;height:22px;border-radius:7px;background:transparent}
+.ditem.sub{padding:9px 13px}
+.ditem.sub.on{background:#F7F7FA}
+.ditem.sub.on .dtx{color:#2C2C2A;font-weight:600}
+
+/* ===== 天气条 / 城市弹层 ===== */
+.wchip{border:none;font-family:inherit;cursor:pointer;transition:background .15s}
+.wchip:hover{background:#D6E8FA}
+.wnote{font-size:10.5px;color:#8A8A93;margin-top:8px;line-height:1.5}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;z-index:41;border-radius:20px 20px 0 0;padding:10px 18px 22px;transform:translateY(100%);transition:transform .28s cubic-bezier(.3,.8,.3,1);box-shadow:0 -6px 26px rgba(20,20,45,.10)}
+.sheet.on{transform:none}
+.sheet .sbar{width:34px;height:4px;border-radius:3px;background:#E4E4E9;margin:0 auto 14px}
+.sheet .stt{font-size:15px;font-weight:600;letter-spacing:-.2px}
+.sheet .ssb{font-size:11px;color:#A1A1AA;margin-top:4px;margin-bottom:13px}
+.sgeo{display:flex;align-items:center;gap:9px;border:1.5px solid #6D5BD0;border-radius:12px;padding:11px 13px;cursor:pointer;margin-bottom:14px;background:#F7F5FF}
+.sgeo .sic{width:11px;height:11px;border:1.6px solid #6D5BD0;border-radius:50%;flex:none}
+.sgeo .stx{font-size:13px;font-weight:600;color:#534AB7}
+.sgeo .sds{font-size:10px;color:#8A8A93;font-weight:400;margin-top:1px}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cbtn{border:1.5px solid rgba(0,0,0,.07);background:#FAFAFC;border-radius:12px;padding:11px 6px;font-family:inherit;cursor:pointer;transition:all .15s;text-align:center}
+.cbtn:hover{border-color:rgba(109,91,208,.4)}
+.cbtn.sel{border-color:#6D5BD0;background:#F3F1FE}
+.cbtn .cnm{font-size:12.5px;font-weight:600;color:#2C2C2A}
+.cbtn .cwt{font-size:10px;color:#8A8A93;margin-top:2px}
+.cbtn .clv{font-size:9.5px;font-weight:700;color:#534AB7;margin-top:5px}
+
+/* ===== 板块 3 秒体感 ===== */
+.bd{border-radius:14px;border:1px solid;padding:16px 14px 14px;margin-top:14px;text-align:center}
+.bdtip{font-size:10.5px;margin-top:10px;opacity:.85;line-height:1.5}
+.bdnum{font-size:26px;font-weight:600;letter-spacing:-.5px;color:#993556;line-height:1.1}
+.bdnum i{font-size:12px;font-weight:500;font-style:normal;color:#D4537E;margin-left:2px}
+.bd input[type=range]{margin-top:2px;height:28px}
+.flipwrap{width:62px;height:86px;margin:2px auto 0;perspective:520px;cursor:pointer}
+.flipcard{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.2,.2,1)}
+.flipwrap.on .flipcard{transform:rotateY(180deg)}
+.flipcard span{position:absolute;inset:0;border-radius:9px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.flipcard .f1{background:#534AB7;color:#CECBF6}
+.flipcard .f2{background:#fff;border:1px solid #7F77DD;color:#26215C;transform:rotateY(180deg)}
+.bdchips{display:flex;gap:7px}
+.bdchip{flex:1;border:1.5px solid rgba(0,0,0,.08);background:#fff;border-radius:10px;padding:12px 4px;font-family:inherit;font-size:11.5px;font-weight:600;color:#4B5563;cursor:pointer;transition:all .15s}
+.bdchip.sel{border-color:#1D9E75;background:#E1F5EE;color:#04342C}
+.bdtype{display:inline-flex;align-items:center;gap:3px;background:#fff;border:1px solid #BA7517;border-radius:18px;padding:9px 14px;min-width:186px;justify-content:flex-start;text-align:left}
+.bdtype span{font-size:12.5px;color:#412402;min-height:17px}
+.bdcaret{width:1.5px;height:14px;background:#BA7517;display:inline-block;flex:none;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ===== 入口卡牌流 ===== */
+.crail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;padding:2px 18px 8px;margin:12px -18px 0}
+.crail::-webkit-scrollbar{display:none}
+.ccard{flex:0 0 150px;scroll-snap-align:start;border-radius:14px;padding:13px;border:1px solid;text-align:left;font-family:inherit;cursor:pointer;position:relative;transition:transform .12s}
+.ccard:hover{transform:translateY(-1px)}
+.ccard .cn{font-size:13.5px;font-weight:600;margin-bottom:4px}
+.ccard .cd{font-size:10.5px;line-height:1.45;opacity:.78}
+.ccard .ct2{position:absolute;top:10px;right:11px;font-size:9px;font-weight:700;opacity:.5}
+.ccard.off{opacity:.42;filter:grayscale(.4);cursor:not-allowed}
+.ccard.off:hover{transform:none}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="title-block">
+    <h1>电子衣柜 · 界面原型</h1>
+    <div class="sub">核心只有一个：<b>拿主意</b>。<br>衣柜和广场是配套，抽屉里已经降级。<br>四个板块点进去，各有一个 3 秒体感。</div>
+    <div class="legend">
+      <h2>四个板块 = 四种交互范式</h2>
+      <div class="legend-item"><span class="dot" style="background:#6D5BD0"></span><div><div class="k">抽取式</div><div class="v">塔罗牌 / 刮刮乐 / 盲盒<br>放弃控制权，翻牌 · 刮开</div></div></div>
+      <div class="legend-item"><span class="dot" style="background:#D4537E"></span><div><div class="k">调节式</div><div class="v">能量条 / 社交电量<br>拖滑块，连续值，实时反馈</div></div></div>
+      <div class="legend-item"><span class="dot" style="background:#1D9E75"></span><div><div class="k">选择式</div><div class="v">身份扮演 / 场景 / MBTI<br>点卡片，明确的主动决策</div></div></div>
+      <div class="legend-item"><span class="dot" style="background:#BA7517"></span><div><div class="k">输入式</div><div class="v">一句话日记 / 水晶能量<br>打一句话，下面自己匹配</div></div></div>
+    </div>
+    <div class="sub" style="margin-top:18px;font-size:12px">注：入口墙上的灰卡是「演示未做」的占位，<br>用来讲清板块可以往上挂新入口。</div>
+  </div>
+
+  <div class="phone">
+    <div class="statusbar"><span>9:41</span><span>●●● &nbsp; ▮</span></div>
+    <div class="navbar">
+      <button class="hamb" id="hambBtn" onclick="openDrawer()" aria-label="打开菜单"><i></i><i></i><i></i></button>
+      <button class="back" id="backBtn" onclick="back()" style="visibility:hidden">‹</button>
+      <span class="ttl" id="navTitle">拿主意</span>
+      <button class="navbtn" id="navRight" onclick="go('plaza')">广场</button>
+    </div>
+    <div class="stage" id="stage">
+      <div class="screen on" id="s-home"></div>
+      <div class="screen" id="s-closet"></div>
+      <div class="screen" id="s-entries"></div>
+      <div class="screen" id="s-ext"></div>
+      <div class="screen" id="s-input"></div>
+      <div class="screen" id="s-plaza"></div>
+      <div class="screen" id="s-energy"></div>
+      <div class="screen" id="s-identity"></div>
+      <div class="screen" id="s-tarot"></div>
+      <div class="screen" id="s-tread"></div>
+      <div class="screen" id="s-scratch"></div>
+      <div class="screen" id="s-result"></div>
+    </div>
+    <div class="mask" id="dMask" onclick="closeDrawer()"></div>
+    <aside class="drawer" id="drawer" aria-label="主菜单">
+      <div class="dhd">
+        <div class="dh1">电子衣柜</div>
+        <div class="dh2">今天穿什么，你拿主意</div>
+      </div>
+      <div class="dnav">
+        <button class="ditem hero on" id="di-home" onclick="navTo('home')">
+          <span class="dic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#534AB7" stroke-width="1.3"><rect x="2.4" y="2.4" width="11.2" height="11.2" rx="2.6"/><circle cx="5.9" cy="5.9" r="1" fill="#534AB7" stroke="none"/><circle cx="8" cy="8" r="1" fill="#534AB7" stroke="none"/><circle cx="10.1" cy="10.1" r="1" fill="#534AB7" stroke="none"/></svg></span>
+          <span class="dtx">拿主意<span class="dds">抽 · 拖 · 点 · 说，选一种定今天</span></span>
+        </button>
+        <div class="dsep"></div>
+        <div class="dlab">配套</div>
+        <button class="ditem sub" id="di-closet" onclick="navTo('closet')">
+          <span class="dic"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#888780" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.4V4.1a1.6 1.6 0 1 1 2.2 1.5"/><path d="M8 5.4 2.6 9.1c-.6.4-.3 1.2.4 1.2h10c.7 0 1-.8.4-1.2L8 5.4Z"/></svg></span>
+          <span class="dtx">我的衣柜<span class="dds">放单品的地方</span></span>
+        </button>
+        <button class="ditem sub" id="di-plaza" onclick="navTo('plaza')">
+          <span class="dic"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#888780" stroke-width="1.4" stroke-linecap="round"><circle cx="5.6" cy="6" r="2"/><circle cx="11.6" cy="6.6" r="1.6"/><path d="M2.2 12.8c.5-1.9 1.9-2.9 3.4-2.9M9 12.8c.4-1.5 1.4-2.5 2.8-2.5"/></svg></span>
+          <span class="dtx">广场<span class="dds">看别人怎么决定</span></span>
+        </button>
+      </div>
+      <div class="dft">我们不做推荐。<br>我们只帮你把今天定下来。</div>
+    </aside>
+    <div class="mask" id="cMask" onclick="closeCity()"></div>
+    <div class="sheet" id="citySheet">
+      <div class="sbar"></div>
+      <div class="stt">天气跟着你在哪</div>
+      <div class="ssb">它只决定一件事：今天穿多厚。</div>
+      <div class="sgeo" onclick="pickGeo()">
+        <span class="sic"></span>
+        <span><span class="stx">用当前位置</span><br><span class="sds">推荐 · 自动读取，不用管它</span></span>
+      </div>
+      <div class="cgrid" id="cGrid"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============ 数据 ============ */
+const WARDROBE = [
+  {id:1,  name:'奶油白针织开衫', cat:'上装',   color:'#F1E9DA', text:'#6B6252', style:'甜美'},
+  {id:2,  name:'浅蓝衬衫',       cat:'上装',   color:'#C3D7E8', text:'#3D5A73', style:'简约'},
+  {id:3,  name:'纯黑高领打底',   cat:'上装',   color:'#3A3A3E', text:'#E8E8EC', style:'简约'},
+  {id:4,  name:'牛仔阔腿裤',     cat:'下装',   color:'#6E8CA8', text:'#EEF2F6', style:'运动'},
+  {id:5,  name:'米白百褶裙',     cat:'下装',   color:'#EDE6D8', text:'#6B6252', style:'甜美'},
+  {id:6,  name:'燕麦色西装外套', cat:'外套',   color:'#D6CAB4', text:'#5E5544', style:'通勤'},
+  {id:7,  name:'雾紫针织连衣裙', cat:'连衣裙', color:'#C6BADC', text:'#4B4166', style:'文艺'},
+  {id:8,  name:'白色小白鞋',     cat:'鞋',     color:'#EFEFEC', text:'#7A7A75', style:'运动'},
+  {id:9,  name:'焦糖色乐福鞋',   cat:'鞋',     color:'#A9743F', text:'#FBEEE0', style:'复古'},
+  {id:10, name:'银灰细项链',     cat:'配饰',   color:'#C8C8CE', text:'#5C5C63', style:'简约'}
+];
+
+/* 大阿尔卡纳 22 张。三张牌各扮演一个角色，所以每张牌有三种读法：
+   state = 作为「今天的状态」时读 · block = 作为「你卡在哪」时读 · wear = 作为「今天怎么穿」时读。
+   全部正导向：不给坏结果，只给「今天该有的态度」。
+   逆位槽位（待补）：每张牌可加 rev:{state:'',block:'',wear:'',colors:[],tip:''}，
+   框架是「正位=能量向外 / 逆位=能量向内」，同样全部正导向。当前 demo 只跑正位。 */
+const TAROT = [
+  {no:'0',   cn:'愚者',   kw:'出发 · 轻盈 · 不怕', vibe:'运动', colors:['奶油白','浅蓝'], tip:'一双好走的鞋',     avoid:['炭灰'],
+   state:'想出发，但还没想好去哪',   block:'你怕开始得不够漂亮',       wear:'穿一身随时能出门的'},
+  {no:'I',   cn:'魔术师', kw:'行动 · 表达 · 创造', vibe:'通勤', colors:['纯黑','象牙白'], tip:'一块利落的手表',   avoid:['藕粉'],
+   state:'今天状态很活，想说点什么', block:'你想得太多，缺的是动手',   wear:'穿一件有存在感的上衣'},
+  {no:'II',  cn:'女祭司', kw:'直觉 · 安静 · 分寸', vibe:'简约', colors:['藏蓝','象牙白'], tip:'一枚细银饰',       avoid:['亮黄'],
+   state:'想安静待着，不想解释',     block:'其实你早就知道答案了',     wear:'穿得素一点，越简单越好'},
+  {no:'III', cn:'皇后',   kw:'丰盛 · 照料 · 柔软', vibe:'甜美', colors:['藕粉','奶油白'], tip:'一条柔软的围巾',   avoid:['纯黑'],
+   state:'今天想被好好对待',         block:'你对自己太苛刻了',         wear:'穿那件最软的，允许自己舒服'},
+  {no:'IV',  cn:'皇帝',   kw:'秩序 · 掌控 · 结构', vibe:'通勤', colors:['炭灰','米白'], tip:'一件有肩线的外套', avoid:['玫粉'],
+   state:'今天想掌控，不想被推着走', block:'你在硬撑，其实可以不撑',   wear:'穿有廓形的那件，站得住'},
+  {no:'V',   cn:'教皇',   kw:'传统 · 归属 · 稳妥', vibe:'复古', colors:['焦糖','燕麦'], tip:'一件有年份的旧物',   avoid:['亮黄'],
+   state:'想按熟悉的规矩来',         block:'你怕别人觉得你不对',       wear:'穿那套你穿了很多次的'},
+  {no:'VI',  cn:'恋人',   kw:'关系 · 选择 · 靠近', vibe:'甜美', colors:['玫粉','奶油白'], tip:'一枚小吊坠',       avoid:['炭灰'],
+   state:'今天有想见的人',           block:'你在犹豫要不要先开口',     wear:'穿你被夸过最多的那件'},
+  {no:'VII', cn:'战车',   kw:'前进 · 意志 · 速度', vibe:'运动', colors:['牛仔蓝','纯白'], tip:'一双能跑起来的鞋', avoid:['藕粉'],
+   state:'今天很想往前冲',           block:'你急着赶路，忘了看方向',   wear:'穿利落的，别拖泥带水'},
+  {no:'VIII',cn:'力量',   kw:'温柔 · 底气 · 驯服', vibe:'慵懒', colors:['燕麦','米白'], tip:'一件质感好的针织', avoid:['正红'],
+   state:'今天很稳，能接住事',       block:'你把温柔当成了软弱',       wear:'穿得柔软，但有骨架'},
+  {no:'IX',  cn:'隐士',   kw:'独处 · 内省 · 简朴', vibe:'简约', colors:['炭灰','燕麦'], tip:'一顶低调的帽子',   avoid:['正红'],
+   state:'今天不想被打扰',           block:'你把自己关得太紧了',       wear:'素一点、安静一点，很好'},
+  {no:'X',   cn:'命运之轮',kw:'转机 · 循环 · 时机', vibe:'复古', colors:['酒红','焦糖'], tip:'一件来历特别的首饰',avoid:['银灰'],
+   state:'今天有件事要转弯了',       block:'你还在等一个明确的信号',   wear:'穿你平时不敢试的颜色'},
+  {no:'XI',  cn:'正义',   kw:'公平 · 权衡 · 清楚', vibe:'简约', colors:['纯白','藏蓝'], tip:'一条直线条的项链', avoid:['玫粉'],
+   state:'今天想把事情说清楚',       block:'你在权衡，却迟迟不落笔',   wear:'穿得干净，边界清楚'},
+  {no:'XII', cn:'倒吊人', kw:'停顿 · 换位 · 松弛', vibe:'文艺', colors:['雾紫','米白'], tip:'一件宽松的衬衫',   avoid:['正红'],
+   state:'今天想换个角度看事情',     block:'有些事不值得继续等',       wear:'穿反常规一点的搭法'},
+  {no:'XIII',cn:'死神',   kw:'结束 · 腾出 · 告别', vibe:'简约', colors:['炭灰','米白'], tip:'很久没戴的那条围巾',avoid:['纯黑'],
+   state:'有件事该结束了',           block:'你怕结束，所以还在拖',     wear:'放手不是失去，是腾出手'},
+  {no:'XIV', cn:'节制',   kw:'调和 · 平衡 · 缓慢', vibe:'文艺', colors:['浅蓝','米白'], tip:'两件叠穿，刚好',   avoid:['亮黄'],
+   state:'今天想慢慢来，不着急',     block:'你想一口气做完所有事',     wear:'穿得刚好，不多不少'},
+  {no:'XV',  cn:'恶魔',   kw:'欲望 · 坦白 · 挣脱', vibe:'明艳', colors:['纯黑','酒红'], tip:'一点亮面材质的配饰',avoid:['藕粉'],
+   state:'今天有点想放纵一下',       block:'你怕承认自己真的想要',     wear:'承认欲望不可耻，穿直接一点'},
+  {no:'XVI', cn:'塔',     kw:'推翻 · 松动 · 重建', vibe:'慵懒', colors:['燕麦','雾灰'], tip:'宽松到能呼吸的那件',avoid:['炭灰'],
+   state:'有件事突然变了',           block:'你还在撑一个不稳的东西',   wear:'塌掉的本来就不稳，不用撑'},
+  {no:'XVII',cn:'星星',   kw:'希望 · 疗愈 · 松弛', vibe:'文艺', colors:['浅蓝','米白'], tip:'一点点亮片',       avoid:['纯黑'],
+   state:'想被看见，又怕太显眼',     block:'你总觉得还没准备好',       wear:'穿那件你最喜欢的，别找理由'},
+  {no:'XVIII',cn:'月亮',  kw:'朦胧 · 直觉 · 慢慢来',vibe:'文艺',colors:['雾紫','雾灰'], tip:'一件带着旧感的衣服',avoid:['亮黄'],
+   state:'今天有点看不清方向',       block:'你在为还没发生的事焦虑',   wear:'看不清就慢慢走，穿软的'},
+  {no:'XIX', cn:'太阳',   kw:'明亮 · 坦荡 · 快乐', vibe:'明艳', colors:['亮黄','纯白'], tip:'金色耳饰',         avoid:['银灰'],
+   state:'今天想亮一点，不想藏着',   block:'你怕别人觉得你太张扬',     wear:'今天不用低调，你本来就是亮的'},
+  {no:'XX',  cn:'审判',   kw:'清醒 · 召唤 · 决定', vibe:'通勤', colors:['象牙白','藏蓝'], tip:'一件有力量感的配饰',avoid:['藕粉'],
+   state:'今天想把一件事想明白',     block:'你在等一个别人给的说法',   wear:'穿你早就想穿的那套'},
+  {no:'XXI', cn:'世界',   kw:'完成 · 圆满 · 抵达', vibe:'复古', colors:['焦糖','米白'], tip:'一套戴齐的细首饰', avoid:['雾灰'],
+   state:'今天很想说一句「我到了」', block:'你总觉得还差最后一步',     wear:'穿最完整的那一套，配齐'}
+];
+
+const IDENTITIES = [
+  {e:'✦', n:'女主角',   d:'今天所有人都在看你',   style:'明艳', colors:['正红','玫粉'], avoid:['炭灰']},
+  {e:'❊', n:'学姐',     d:'干净、可靠、有点距离', style:'简约', colors:['米白','浅蓝'], avoid:['亮黄']},
+  {e:'◈', n:'反派',     d:'今天不想讨谁喜欢',     style:'明艳', colors:['纯黑','雾紫'], avoid:['藕粉']},
+  {e:'◌', n:'隐形人',   d:'不想被注意到',         style:'慵懒', colors:['燕麦','银灰'], avoid:['正红']}
+];
+
+/* 社交电量档位：[下限,上限,档位名,说明文案,色块色,风格,主色,避雷色] */
+const SOC_STATES = [
+  [0,20,'独处','今天谁都不想见，穿最软、最松的那件。','#B9B4E0','慵懒',['米白','雾灰'],['正红']],
+  [20,45,'小聚','见一两个熟人，舒服里带一点点好看。','#E7A9C6','慵懒',['米白','浅蓝'],['正红','亮黄']],
+  [45,70,'正常','普通的一天，干净利落就好。','#D98BB4','简约',['米白','浅蓝','银灰'],[]],
+  [70,90,'热闹','要见不少人，穿得精神一点。','#D4537E','通勤',['燕麦','炭灰','纯白'],[]],
+  [90,101,'满格','今天你是全场焦点，允许明艳。','#B03A63','明艳',['正红','亮黄','纯白'],['炭灰']]
+];
+
+const CAT_ICON = {
+  '上装':'M14 6 L6 10 L3 17 L9 19 L11 16 L11 34 L29 34 L29 16 L31 19 L37 17 L34 10 L26 6 C24 9.5 16 9.5 14 6 Z',
+  '下装':'M11 5 H29 L30.5 19 L26.5 35 H22 L20 20 L18 35 H13.5 L10.5 19 Z',
+  '外套':'M13 5 L6 9 L4 21 L9 22 L9 35 H31 V22 L36 21 L34 9 L27 5 L20 11 Z',
+  '连衣裙':'M15 5 H25 L27.5 12 L33 35 H7 L12.5 12 Z',
+  '鞋':'M4 23 L11 23 L13.5 14 H20 L22.5 23 L36 23 L36 30 H4 Z',
+  '配饰':'M20 5 A12 12 0 0 0 8 17 A12 12 0 0 0 20 29 A12 12 0 0 0 32 17 A12 12 0 0 0 20 5 Z'
+};
+
+function icon(cat, fill, size){
+  size = size || 30;
+  const d = CAT_ICON[cat] || CAT_ICON['上装'];
+  const stroke = cat === '配饰' ? 'none' : 'none';
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 40 40"><path d="'+d+'" fill="'+fill+'" opacity="0.92"/>'+
+    (cat==='配饰' ? '<circle cx="20" cy="17" r="4.2" fill="'+fill+'" opacity="1"/>' : '')+'</svg>';
+}
+
+/* ============ 状态 ============ */
+let state = {};
+const HIST = [];
+let rejected = [];
+
+/* 天气：全 App 唯一的自动注入依赖，不进板块 */
+const CITIES = [
+  {n:'西安',   w:'18℃ 阴',   lv:'薄外套'},
+  {n:'北京',   w:'9℃ 晴',    lv:'加一件'},
+  {n:'上海',   w:'21℃ 多云', lv:'单层就够'},
+  {n:'成都',   w:'16℃ 小雨', lv:'带伞 + 薄外套'},
+  {n:'广州',   w:'29℃ 闷热', lv:'越薄越好'},
+  {n:'哈尔滨', w:'2℃ 风大',  lv:'羽绒'}
+];
+let curCity = 0;
+let cityNote = '';
+
+/* ============ 抽屉导航 ============ */
+function openDrawer(){
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('dMask').classList.add('on');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('dMask').classList.remove('on');
+}
+function navTo(id){
+  closeDrawer();
+  HIST.length = 0;
+  go(id, false);
+  HIST.push(id);
+}
+/* 当前所在页 → 抽屉里该高亮哪一项 */
+function drawerRoot(id){
+  if(id === 'closet') return 'closet';
+  if(id === 'plaza') return 'plaza';
+  return 'home';
+}
+function syncDrawer(id){
+  const root = drawerRoot(id);
+  ['closet','home','plaza'].forEach(k=>{
+    const el = document.getElementById('di-'+k);
+    if(el) el.classList.toggle('on', k === root);
+    if(el) el.querySelector('.dic svg').setAttribute('stroke', k === root ? '#534AB7' : '#888780');
+  });
+}
+
+/* ============ 路由 ============ */
+const RENDER = {
+  home: renderHome, closet: renderCloset, ext: renderExt,
+  input: renderInput, plaza: renderPlaza, energy: renderEnergy,
+  identity: renderIdentity, tarot: renderTarot, tread: renderTread, scratch: renderScratch
+};
+function go(id, push, dir){
+  if(RENDER[id]) RENDER[id]();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on','slide-r','slide-l'));
+  const el = document.getElementById('s-'+id);
+  el.classList.remove('slide-r','slide-l');
+  void el.offsetWidth; /* 重置动画，让每次切换都重新滑入 */
+  el.classList.add('on', dir==='l' ? 'slide-l' : 'slide-r');
+  document.getElementById('stage').scrollTop = 0;
+  const T = {home:'拿主意', closet:'我的衣柜', ext:'扩展位', input:'说一句话', plaza:'广场',
+             energy:'社交电量', identity:'今天想成为谁', tarot:'抽三张牌', tread:'牌给你的话', scratch:'刮刮乐', result:'今天穿这套'};
+  document.getElementById('navTitle').textContent = T[id] || '';
+  const ROOT = {home:1, closet:1, plaza:1};
+  document.getElementById('backBtn').style.visibility = ROOT[id] ? 'hidden' : 'visible';
+  document.getElementById('navRight').style.visibility = (id==='home') ? 'visible' : 'hidden';
+  syncDrawer(id);
+  if(id==='result') renderResult();
+  if(id==='scratch') setTimeout(initScratch, 50);
+  if(push!==false) HIST.push(id);
+}
+function back(){
+  HIST.pop();
+  const prev = HIST[HIST.length-1] || 'home';
+  HIST.pop();
+  go(prev, true, 'l'); /* 返回：从左边滑入 */
+}
+
+/* ============ 挂在杆上的决定方式 ============ */
+const HOOK = '<path d="M48 50 L48 43 C48 34 57 34 57 42 C57 46 54.5 48 51.5 48" fill="none" stroke="#B4B2A9" stroke-width="2" stroke-linecap="round"/>'+
+             '<path d="M48 50 L28 60 M48 50 L68 60" fill="none" stroke="#B4B2A9" stroke-width="2" stroke-linecap="round"/>'+
+             '<line x1="28" y1="60" x2="68" y2="60" stroke="#B4B2A9" stroke-width="2" stroke-linecap="round"/>';
+
+/* 首页 = 四个核心入口，点进去直达（不再有「抽取式/调节式」这层壳） */
+const BOARDS = [
+  {k:'塔罗牌', t:'抽三张，牌会讲一个今天的故事', to:'tarot',
+   c:'#EEEDFE', b:'#CECBF6', fg:'#26215C', line:'#7F77DD', dk:'#534AB7',
+   shape:'<path d="M36 73 H60 L64 106 H32 Z" fill="#EEEDFE" stroke="#7F77DD" stroke-width="1.5" stroke-linejoin="round"/>'+
+         '<path d="M40 73 C40 63.5 56 63.5 56 73" fill="none" stroke="#534AB7" stroke-width="1.5"/>'+
+         '<line x1="44" y1="73" x2="37" y2="85" stroke="#534AB7" stroke-width="1.3" stroke-linecap="round"/>'+
+         '<line x1="52" y1="73" x2="59" y2="85" stroke="#534AB7" stroke-width="1.3" stroke-linecap="round"/>'},
+  {k:'社交电量', t:'拖一根电量，今天要见几个人', to:'energy',
+   c:'#FBEAF0', b:'#F4C0D1', fg:'#4B1528', line:'#D4537E', dk:'#993556',
+   shape:'<rect x="30" y="79" width="36" height="16" rx="4" fill="#FBEAF0" stroke="#D4537E" stroke-width="1.5"/>'+
+         '<rect x="41" y="75" width="14" height="24" rx="3" fill="none" stroke="#D4537E" stroke-width="1.5"/>'+
+         '<line x1="48" y1="79" x2="48" y2="95" stroke="#D4537E" stroke-width="1.5"/>'+
+         '<circle cx="34" cy="87" r="1.6" fill="#ED93B1"/><circle cx="62" cy="87" r="1.6" fill="#ED93B1"/>'},
+  {k:'身份扮演', t:'女主角 / 学姐 / 反派 · 今天你想成为谁', to:'identity',
+   c:'#E1F5EE', b:'#9FE1CB', fg:'#04342C', line:'#1D9E75', dk:'#0F6E56',
+   shape:'<path d="M48 58 L38 63 L31 72 L36 77 L39 74 L39 106 L57 106 L57 74 L60 77 L65 72 L58 63 Z" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5" stroke-linejoin="round"/>'+
+         '<line x1="48" y1="58" x2="48" y2="106" stroke="#5DCAA5" stroke-width="1.2"/>'+
+         '<circle cx="45" cy="77" r="1.6" fill="#1D9E75"/><circle cx="51" cy="77" r="1.6" fill="#1D9E75"/>'},
+  {k:'输入式', t:'打一句话，它自己匹配 · 一句话日记', to:'input',
+   c:'#FAEEDA', b:'#FAC775', fg:'#412402', line:'#BA7517', dk:'#854F0B',
+   shape:'<rect x="33" y="62" width="30" height="44" rx="4" fill="#FAEEDA" stroke="#BA7517" stroke-width="1.5"/>'+
+         '<circle cx="48" cy="70" r="2.6" fill="none" stroke="#BA7517" stroke-width="1.3"/>'+
+         '<path d="M40 84 H56 M40 92 H51" fill="none" stroke="#BA7517" stroke-width="1.8" stroke-linecap="round"/>'}
+];
+
+function hangerSVG(e){ return '<svg viewBox="0 0 96 132">'+HOOK+e.shape+'</svg>'; }
+
+/* ============ 第一屏「拿主意」：四个核心入口，点进去直达 ============ */
+function renderHome(){
+  const c = CITIES[curCity];
+  let h = '<div class="h2">今天，用哪种方式拿主意</div>'+
+          '<div class="h2sub">四个入口，点一个就直接开始。</div>';
+  h += '<div style="margin-top:14px"><button class="wchip" onclick="openCity()" title="点击切换城市">'+
+       '<svg width="11" height="11" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="none" stroke="currentColor" stroke-width="1.3"/>'+
+       '<line x1="6" y1="1.5" x2="6" y2="6" stroke="currentColor" stroke-width="1.3"/></svg>'+
+       c.n+' '+c.w+' · 已自动加入决策</button></div>';
+  if(cityNote) h += '<div class="wnote">'+cityNote+'</div>';
+  h += '<div style="height:14px"></div>';
+  BOARDS.forEach(e=>{
+    h += '<button class="eboard" style="background:'+e.c+';border-color:'+e.b+';color:'+e.fg+'" onclick="go(\''+e.to+'\')">'+
+         '<span class="ebi" style="color:'+e.dk+'">'+boardIcon(e)+'</span>'+
+         '<span class="ebt"><span class="ebn" style="color:'+e.dk+'">'+e.k+'</span>'+
+         '<span class="ebd">'+e.t+'</span></span>'+
+         '<span class="ebgo" style="color:'+e.dk+'">›</span></button>';
+  });
+  document.getElementById('s-home').innerHTML = h;
+}
+function boardIcon(e){ return '<svg width="30" height="40" viewBox="24 52 48 60">'+e.shape+'</svg>'; }
+
+/* ============ 我的单品 ============ */
+function renderCloset(){
+  let h = '<div class="h2">我的衣柜</div><div class="h2sub">10 件单品 · 已全部识别打标</div>';
+  h += '<span class="count-pill">已替你决定 14 次</span>';
+  h += '<div class="wgrid">';
+  WARDROBE.forEach(it=>{
+    h += '<div class="witem"><div class="thumb" style="background:'+it.color+'">'+icon(it.cat, it.text, 30)+'</div>'+
+         '<div class="nm">'+it.name+'</div><div class="ct">'+it.cat+' · '+it.style+'</div></div>';
+  });
+  h += '</div>';
+  h += '<button class="btn ghost" onclick="go(\'home\')">回到「拿主意」</button>';
+  document.getElementById('s-closet').innerHTML = h;
+}
+
+/* （板块二级页 + 3 秒体感 demo 已移除：首页直接是 4 个入口，点进去直达） */
+
+/* ============ 天气：城市弹层 ============ */
+function renderCity(){
+  const box = document.getElementById('cGrid');
+  if(!box) return;
+  box.innerHTML = CITIES.map((c,i)=>
+    '<button class="cbtn'+(i===curCity?' sel':'')+'" onclick="pickCity('+i+')">'+
+    '<div class="cnm">'+c.n+'</div><div class="cwt">'+c.w+'</div><div class="clv">'+c.lv+'</div></button>'
+  ).join('');
+}
+function openCity(){
+  renderCity();
+  document.getElementById('citySheet').classList.add('on');
+  document.getElementById('cMask').classList.add('on');
+}
+function closeCity(){
+  document.getElementById('citySheet').classList.remove('on');
+  document.getElementById('cMask').classList.remove('on');
+}
+function pickCity(i){
+  curCity = i;
+  cityNote = '换到 '+CITIES[i].n+'，厚薄改成「'+CITIES[i].lv+'」';
+  closeCity();
+  renderHome();
+}
+function pickGeo(){
+  curCity = 0;
+  cityNote = '已切回当前位置（'+CITIES[0].n+'），厚薄「'+CITIES[0].lv+'」';
+  closeCity();
+  renderHome();
+}
+
+/* ============ 扩展位说明 ============ */
+function renderExt(){
+  let h = '<div class="h2">为什么留一个空位？</div>'+
+          '<div class="h2sub">它不是装饰——它说明这套结构可以继续加东西。</div>';
+  h += '<div class="grp"><div class="grp-h">多一个板块，只需要三样东西</div>';
+  h += '<div class="mres"><div class="mrt">一 · 一个交互范式</div><div class="mrs">抽 / 拖 / 点 / 说，四选一，决定用户怎么把意图交出来</div></div>';
+  h += '<div class="mres"><div class="mrt">二 · 一组受控词表</div><div class="mrs">8 种风格 · 24 个色 · 7 个品类，所有入口共用一套，不许各写各的</div></div>';
+  h += '<div class="mres"><div class="mrt">三 · 一个约束生成器</div><div class="mrs">把范式产出翻译成筛选条件，再去衣柜里捞单品</div></div>';
+  h += '</div>';
+  h += '<div class="h2sub" style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,.06)">'+
+       '所以「再加一个」不是画饼：<br>下一个板块不需要改架构，挂上去就行。</div>';
+  h += '<button class="btn" onclick="openDrawer()">打开菜单看看三个大类</button>';
+  document.getElementById('s-ext').innerHTML = h;
+}
+
+/* ============ 输入式：命令栏 ============ */
+const KW = [
+  {k:['累','困','乏','没劲','疲惫','熬夜','不想动'], c:'#FBEAF0', dk:'#4B1528', lab:'电量 · 低',
+   why:'低电量，穿松一点、颜色少一点', out:'米白衬衫 · 直筒牛仔 · 帆布鞋'},
+  {k:['面试','实习','答辩','宣讲','汇报','正式'], c:'#E6F1FB', dk:'#042C53', lab:'场景 · 正式',
+   why:'正式场合，先把锐角收掉', out:'燕麦西装 · 白 T · 直筒西裤'},
+  {k:['约会','见面','喜欢','暧昧','相亲'], c:'#FBEAF0', dk:'#7B2440', lab:'场景 · 约会',
+   why:'柔色系，别用力过猛', out:'藕粉针织 · 半裙 · 小手包'},
+  {k:['拍照','拍片','出片','扫街','看展','展'], c:'#EEEDFE', dk:'#26215C', lab:'场景 · 出片',
+   why:'要有轮廓，镜头里才立得住', out:'文艺叠穿 · 长裙 · 帆布鞋'},
+  {k:['图书馆','上课','自习','教室','坐一天'], c:'#E1F5EE', dk:'#04342C', lab:'场景 · 久坐',
+   why:'久坐要松，室内外温差要一层', out:'宽松针织 · 直筒裤 · 薄外套'},
+  {k:['热','夏天','晒','闷'], c:'#FAEEDA', dk:'#412402', lab:'天气 · 热',
+   why:'先降温，颜色可以亮一点', out:'棉麻衬衫 · 短裤 · 凉鞋'},
+  {k:['冷','降温','风大','秋','冬'], c:'#E6F1FB', dk:'#0C447C', lab:'天气 · 冷',
+   why:'先保厚，再谈风格', out:'驼色大衣 · 高领 · 短靴'},
+  {k:['开心','兴奋','想美','漂亮','高兴'], c:'#FBEAF0', dk:'#7B2440', lab:'情绪 · 上扬',
+   why:'今天可以明艳一次', out:'正红半裙 · 白衬衫 · 玛丽珍'}
+];
+function renderInput(){
+  let h = '<div class="h2">今天什么样，直接说</div>'+
+          '<div class="h2sub">不用抽、不用拖——打一句话，下面自己匹配。</div>';
+  h += '<div class="omb"><span class="lico"></span>'+
+       '<input id="ombInput" placeholder="说一句话，比如…" autocomplete="off" oninput="runOmni()"></div>';
+  h += '<div class="sug">'+
+       ['今天好累','下午去面试','想去拍照片','图书馆坐一天']
+         .map(s=>'<b onclick="useSug(\''+s+'\')">'+s+'</b>').join('')+
+       '</div>';
+  h += '<div id="ombOut"></div>';
+  document.getElementById('s-input').innerHTML = h;
+  runOmni();
+}
+function useSug(s){
+  const el = document.getElementById('ombInput');
+  if(el){ el.value = s; runOmni(); }
+}
+function runOmni(){
+  const el = document.getElementById('ombInput');
+  const out = document.getElementById('ombOut');
+  if(!out) return;
+  const v = (el && el.value || '').trim();
+  if(!v){
+    out.innerHTML = '<div class="mempty">上面打个字，这里会出现两样东西：<br>它读到了什么 · 匹配到的方向</div>';
+    return;
+  }
+  const hits = KW.filter(w=>w.k.some(k=>v.indexOf(k)>=0));
+  let h = '';
+  if(!hits.length){
+    h += '<div class="mblock"><div class="mlab">从这句话里读到</div>'+
+         '<div class="mempty" style="text-align:left;padding:2px 0">没读到明确的场合或状态。<br>'+
+         '换一句带上「累 / 面试 / 拍照 / 图书馆」这类词试试。</div></div>';
+    h += '<div class="mblock"><div class="mlab">那就别猜了</div>'+
+         '<div class="mres" onclick="go(\'tarot\')"><div class="mrt">交给塔罗牌</div>'+
+         '<div class="mrs">不解释，抽一张，牌义就是今天的穿法</div></div></div>';
+    out.innerHTML = h; return;
+  }
+  h += '<div class="mblock"><div class="mlab">从这句话里读到</div><div class="mchips">'+
+       hits.map(x=>'<span class="mchip" style="background:'+x.c+';color:'+x.dk+'">'+x.lab+'</span>').join('')+
+       '</div></div>';
+  h += '<div class="mblock"><div class="mlab">匹配到的方向</div>';
+  const a = hits[0];
+  h += '<div class="mres hl" onclick="go(\'result\')"><div class="mrt">'+a.why+'</div>'+
+       '<div class="mrs">'+a.out+'</div></div>';
+  if(hits[1]){
+    h += '<div class="mres" onclick="go(\'identity\')"><div class="mrt">也可以走「'+hits[1].lab+'」这条线</div>'+
+         '<div class="mrs">跳去身份扮演，让它按这个方向挑</div></div>';
+  }
+  h += '<div class="mres" onclick="go(\'tarot\')"><div class="mrt">不想选，就抽一张</div>'+
+       '<div class="mrs">把刚读到的东西当牌面范围</div></div>';
+  h += '</div>';
+  out.innerHTML = h;
+}
+
+/* ============ 广场 ============ */
+const FEED = [
+  {nm:'小狗快跑', ini:'狗', av:'#D4537E', tm:'12 分钟前', bd:'塔罗 · 世界', bc:'#EEEDFE', bf:'#534AB7',
+   cs:['#EEEDFE','#E1F5EE','#FAEEDA'], cap:'抽到「世界」，穿了米白 + 燕麦。今天真的顺。', lk:128, cm:12, tag:'抽卡墙'},
+  {nm:'阿绿', ini:'绿', av:'#1D9E75', tm:'38 分钟前', bd:'社交电量 34%', bc:'#FBEAF0', bf:'#993556',
+   cs:['#FBEAF0','#F1EFE8','#E6F1FB'], cap:'电量只有 34，所以全套宽松。舒服比好看重要。', lk:76, cm:8, tag:'推荐'},
+  {nm:'小满', ini:'满', av:'#534AB7', tm:'1 小时前', bd:'身份扮演 · 学姐', bc:'#E1F5EE', bf:'#0F6E56',
+   cs:['#E1F5EE','#F1EFE8','#E6F1FB'], cap:'今天当学姐。燕麦西装真的会自动让人站直。', lk:203, cm:26, tag:'同款'},
+  {nm:'一只鱼', ini:'鱼', av:'#BA7517', tm:'2 小时前', bd:'刮刮乐', bc:'#FAEEDA', bf:'#854F0B',
+   cs:['#FAEEDA','#E6F1FB','#EEEDFE'], cap:'刮出来是牛仔外套 + 碎花裙，本来不敢这么穿的。', lk:54, cm:5, tag:'抽卡墙'},
+  {nm:'未眠', ini:'眠', av:'#993556', tm:'3 小时前', bd:'一句话日记', bc:'#FAEEDA', bf:'#854F0B',
+   cs:['#E6F1FB','#F1EFE8','#EEEDFE'], cap:'就打了「想去拍照片，别太用力」，它给了叠穿。有点准。', lk:91, cm:14, tag:'推荐'}
+];
+let plazaSeg = 0;
+function segTo(btn, name){
+  const box = btn.parentNode;
+  box.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  plazaSeg = name === '推荐' ? 0 : (name === '抽卡墙' ? 1 : 2);
+  renderPlaza();
+}
+function renderPlaza(){
+  let h = '<div class="h2">广场</div><div class="h2sub">今天大家抽到了什么、穿成了什么样。</div>';
+  h += '<div class="seg" style="margin-top:16px">'+
+       ['推荐','抽卡墙','同款'].map((n,i)=>'<button class="'+(plazaSeg===i?'on':'')+'" onclick="segTo(this,\''+n+'\')">'+n+'</button>').join('')+
+       '</div>';
+  h += '<button class="btn" style="margin-top:0;margin-bottom:16px;background:#FAEEDA;color:#854F0B" onclick="go(\'home\')">＋ 去拿个主意，然后发出来</button>';
+  const list = FEED.filter(f=>{
+    if(plazaSeg===0) return true;
+    if(plazaSeg===1) return f.tag === '抽卡墙';
+    return f.tag === '同款' || f.tag === '推荐';
+  });
+  list.forEach(f=>{
+    h += '<div class="pcard"><div class="phead">'+
+         '<span class="pav" style="background:'+f.av+'">'+f.ini+'</span>'+
+         '<div><div class="pnm">'+f.nm+'</div><div class="ptm">'+f.tm+'</div></div>'+
+         '<span class="pbadge" style="background:'+f.bc+';color:'+f.bf+'">'+f.bd+'</span>'+
+         '</div>';
+    h += '<div class="pshot">'+f.cs.map(c=>'<span class="pimg" style="background:'+c+'"></span>').join('')+'</div>';
+    h += '<div class="pcap">'+f.cap+'</div>';
+    h += '<div class="pmeta"><b onclick="likeIt(this)">♡ '+f.lk+'</b><b>说点什么 '+f.cm+'</b><b onclick="go(\'home\')">我也拿一个主意</b></div>';
+    h += '</div>';
+  });
+  document.getElementById('s-plaza').innerHTML = h;
+}
+function likeIt(el){
+  const m = el.textContent.match(/\d+/);
+  const on = el.getAttribute('data-on') === '1';
+  const n = (m ? parseInt(m[0],10) : 0) + (on ? -1 : 1);
+  el.setAttribute('data-on', on ? '0' : '1');
+  el.style.color = on ? '' : '#D4537E';
+  el.textContent = (on ? '♡ ' : '♥ ') + n;
+}
+
+/* ============ 社交电量（滑条＋档位名实时变；颜色块随电量前后移动） ============ */
+let socV = 62;
+function socState(v){ return SOC_STATES.find(x=>v>=x[0] && v<x[1]) || SOC_STATES[SOC_STATES.length-1]; }
+function renderEnergy(){
+  const s = socState(socV);
+  let h = '<div class="h2">今天的社交电量</div>'+
+          '<div class="h2sub">拖一根电量：今天想见多少人，衣服就松多少。</div>';
+  h += '<div class="big-num" style="color:'+s[4]+'"><span id="eNum">'+socV+'</span><span class="big-unit">%</span></div>';
+  h += '<div class="state-txt" id="eTxt"><b id="eName" style="color:'+s[4]+'">'+s[2]+'</b><br>'+s[3]+'</div>';
+  h += '<div class="soc-wrap">';
+  h += '<div class="soc-ends"><span>独处 · 不见人</span><span>热闹 · 全场焦点</span></div>';
+  h += '<div class="soc-bar" id="socBar">'+
+       '<div class="soc-fill" id="socFill" style="width:'+socV+'%;background:'+s[4]+'"></div>'+
+       '<div class="soc-knob" id="socKnob" style="left:'+socV+'%;border-color:'+s[4]+'"></div>'+
+       '</div></div>';
+  h += '<button class="btn" style="background:'+s[4]+'" onclick="doEnergy()">用这个状态定今天</button>';
+  document.getElementById('s-energy').innerHTML = h;
+  bindSoc();
+}
+function onSoc(v){
+  v = Math.max(0, Math.min(100, Math.round(v)));
+  socV = v;
+  const s = socState(v);
+  const tx = document.getElementById('eTxt');
+  if(tx) tx.innerHTML = '<b id="eName" style="color:'+s[4]+'">'+s[2]+'</b><br>'+s[3];
+  const n = document.getElementById('eNum'); if(n) n.textContent = v;
+  const fill = document.getElementById('socFill'); if(fill){ fill.style.width = v + '%'; fill.style.background = s[4]; }
+  const knob = document.getElementById('socKnob'); if(knob){ knob.style.left = v + '%'; knob.style.borderColor = s[4]; }
+  const big = document.querySelector('#s-energy .big-num'); if(big) big.style.color = s[4];
+  const btn = document.querySelector('#s-energy .btn'); if(btn) btn.style.background = s[4];
+  state.energy = v;
+}
+function bindSoc(){
+  const bar = document.getElementById('socBar');
+  if(!bar || bar._bound) return;
+  bar._bound = 1;
+  let dragging = false;
+  const set = e=>{ const r = bar.getBoundingClientRect(); onSoc((e.clientX - r.left) / r.width * 100); };
+  bar.addEventListener('pointerdown', e=>{ dragging = true; try{ bar.setPointerCapture(e.pointerId); }catch(_){} set(e); });
+  bar.addEventListener('pointermove', e=>{ if(dragging) set(e); });
+  const up = ()=>{ dragging = false; };
+  bar.addEventListener('pointerup', up);
+  bar.addEventListener('pointercancel', up);
+}
+function doEnergy(){
+  const v = socV, s = socState(v);
+  state.constraints = {style:s[5], colors:s[6], avoid:s[7],
+    summary:'社交电量 <b>'+v+'%</b> · '+s[2]+' · 风格 <b>'+s[5]+'</b> · 色系 <b>'+s[6].slice(0,2).join(' / ')+'</b>'};
+  state.reading = s[3];
+  state.source = '社交电量';
+  rejected = [];
+  go('result');
+}
+
+/* ============ 身份扮演 ============ */
+function renderIdentity(){
+  state.identity = null;
+  let h = '<div class="h2">今天想当谁？</div><div class="h2sub">选一个人设，它决定今天的风格基调。</div><div class="igrid">';
+  IDENTITIES.forEach((it,i)=>{
+    h += '<button class="ident" id="id'+i+'" onclick="pickIdentity('+i+')">'+
+         '<span class="ie">'+it.e+'</span><div class="in">'+it.n+'</div><div class="id_">'+it.d+'</div></button>';
+  });
+  h += '</div><button class="btn" id="idBtn" style="opacity:.4;pointer-events:none" onclick="doIdentity()">就用这个人设</button>';
+  document.getElementById('s-identity').innerHTML = h;
+}
+function pickIdentity(i){
+  state.identity = i;
+  IDENTITIES.forEach((_,j)=>{
+    const el = document.getElementById('id'+j);
+    if(el) el.classList.toggle('sel', j===i);
+  });
+  const b = document.getElementById('idBtn');
+  b.style.opacity = '1'; b.style.pointerEvents = 'auto';
+}
+function doIdentity(){
+  const it = IDENTITIES[state.identity];
+  state.constraints = {style:it.style, colors:it.colors, avoid:it.avoid,
+    summary:'人设 <b>'+it.n+'</b> · 风格 <b>'+it.style+'</b> · 色系 <b>'+it.colors.join(' / ')+'</b>'};
+  state.reading = '今天你是「'+it.n+'」。'+it.d+'——衣服会先替你说话。';
+  state.source = '身份扮演';
+  rejected = [];
+  go('result');
+}
+
+/* ============ 塔罗：单屏抽牌（圆形放射牌轮，参考 Quin 参考图）+ 独立解读屏 ============ */
+const TROLE = ['今天的状态','你卡在哪','今天怎么穿'];
+let vDeck = [], tPick = [], wheelRot = 0, rMoved = 0, rLastC = -1;
+function buzz(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+function takenAt(i){ return tPick.some(p=>p.i===i); }
+function nearFree(i){
+  const n = vDeck.length;
+  for(let s=1; s<n; s++){
+    if(i+s<n && !takenAt(i+s)) return i+s;
+    if(i-s>=0 && !takenAt(i-s)) return i-s;
+  }
+  return -1;
+}
+function normA(a){ return ((a%360)+540)%360-180; }
+function candIdx(){
+  const n=vDeck.length, step=360/n; let best=0, bestA=1e9;
+  for(let i=0;i<n;i++){ const a=Math.abs(normA(i*step+wheelRot)); if(a<bestA){ bestA=a; best=i; } }
+  return best;
+}
+function renderTarot(){
+  const deck = TAROT.slice();
+  for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=deck[i]; deck[i]=deck[j]; deck[j]=t; }
+  vDeck = deck; tPick = []; wheelRot = 0; rMoved = 0; rLastC = -1;
+  let h = '<div class="h2" id="rTitle">抽第 1 张牌</div>'+
+          '<div class="h2sub">滑动牌轮 · 点中间亮起来的那张。</div>';
+  h += '<div class="r-prog">已抽 <b id="rNum">0</b> / 3 张</div>';
+  h += '<div class="rzone" id="rZone"><div class="r-idx"><span class="dot"></span><span class="lab" id="rIdxLab">1</span></div>';
+  h += '<div class="r-ring" id="rRing">';
+  deck.forEach((c,i)=>{ h += '<div class="rcard" data-i="'+i+'"><i>✦</i><b>'+(i+1)+'</b></div>'; });
+  h += '</div><div class="r-hole"></div></div>';
+  document.getElementById('s-tarot').innerHTML = h;
+  layoutR(true); bindR();
+  buzz([14,22,14]);
+}
+function rTrans(on){
+  document.querySelectorAll('#rRing .rcard').forEach(el=>{ el.style.transition = on ? 'transform .42s cubic-bezier(.34,1.56,.5,1)' : 'none'; });
+}
+function layoutR(hard){
+  const n=vDeck.length, step=360/n, c=candIdx();
+  document.querySelectorAll('#rRing .rcard').forEach((el,i)=>{
+    el.style.transform='rotate('+((i*step+wheelRot))+'deg)';
+    el.classList.toggle('pick', i===c && !takenAt(i));
+    if(hard) el.style.transition='none';
+  });
+  const lab=document.getElementById('rIdxLab'); if(lab) lab.textContent=String(c+1);
+}
+function bindR(){
+  const zone=document.getElementById('rZone'); if(!zone) return;
+  let dragging=false, a0=0, r0=0;
+  const ang=e=>{ const r=zone.getBoundingClientRect(); return Math.atan2(e.clientY-(r.top+r.height/2), e.clientX-(r.left+r.width/2))*180/Math.PI; };
+  zone.addEventListener('pointerdown', e=>{
+    if(tPick.length>=3) return;
+    dragging=true; zone.classList.add('drag'); a0=ang(e); r0=wheelRot; rMoved=0; rLastC=candIdx();
+    rTrans(false);
+    try{ zone.setPointerCapture(e.pointerId); }catch(_){}
+  });
+  zone.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    let d=ang(e)-a0; while(d>180)d-=360; while(d<-180)d+=360;
+    if(Math.abs(d)>rMoved) rMoved=Math.abs(d);
+    wheelRot=r0+d; layoutR();
+    const c=candIdx();
+    if(c!==rLastC){ rLastC=c; if(!takenAt(c)) buzz(8); }
+  });
+  const up=()=>{
+    if(!dragging) return; dragging=false; zone.classList.remove('drag');
+    const n=vDeck.length, step=360/n;
+    wheelRot=Math.round(wheelRot/step)*step;
+    const c=candIdx();
+    if(takenAt(c)){ const nx=nearFree(c); if(nx>=0) wheelRot -= normA(nx*step+wheelRot); }
+    rTrans(true); layoutR();
+    if(rMoved>3) buzz(6);
+    setTimeout(()=>{ rTrans(false); }, 460);
+  };
+  zone.addEventListener('pointerup', up);
+  zone.addEventListener('pointercancel', up);
+  zone.addEventListener('click', ()=>{
+    if(rMoved>6){ rMoved=0; return; }
+    if(tPick.length>=3) return;
+    const c=candIdx(); if(takenAt(c)) return;
+    pickR(c);
+  });
+}
+function pickR(i){
+  if(tPick.length>=3 || takenAt(i)) return;
+  const c=vDeck[i]; tPick.push({i:i,c:c});
+  buzz([12,42,18]);
+  const el=document.querySelector('#rRing .rcard[data-i="'+i+'"]'); if(el) el.classList.add('taken');
+  const num=document.getElementById('rNum'); if(num) num.textContent=String(tPick.length);
+  const title=document.getElementById('rTitle');
+  if(tPick.length<3){
+    if(title) title.textContent='抽第 '+(tPick.length+1)+' 张牌';
+    const n=vDeck.length, step=360/n, nx=nearFree(i);
+    if(nx>=0){ wheelRot -= normA(nx*step+wheelRot); rTrans(true); layoutR(); setTimeout(()=>{ rTrans(false); }, 460); }
+  } else {
+    if(title) title.textContent='三张抽好了';
+    setTimeout(()=>{ setTarotResult(); go('tread'); }, 430);
+  }
+}
+function setTarotResult(){
+  const a=tPick[0].c, b=tPick[1].c, c=tPick[2].c;
+  state.constraints = {style:a.vibe, colors:c.colors, avoid:b.avoid,
+    summary:'塔罗三张 · <b>'+a.cn+'</b> ＋ <b>'+b.cn+'</b> ＋ <b>'+c.cn+'</b> · 风格 <b>'+a.vibe+'</b> · 色系 <b>'+c.colors.join(' / ')+'</b>'};
+  state.reading = a.state + '。' + b.block + '。' + c.wear + '。';
+  state.source = '塔罗三张牌';
+  rejected = [];
+}
+/* 解读屏 —— 抽完三张牌后的独立界面：三张解牌 + 今天穿搭 */
+function renderTread(){
+  const roles = ['今天的状态','你卡在哪','今天怎么穿'];
+  const txt = [tPick[0]&&tPick[0].c.state, tPick[1]&&tPick[1].c.block, tPick[2]&&tPick[2].c.wear];
+  let h = '<div class="h2">牌给你的话</div><div class="h2sub">三张牌，讲一个只属于今天的故事。</div>';
+  h += '<div style="height:14px"></div>';
+  tPick.forEach((p,k)=>{
+    const c=p.c;
+    h += '<div class="t-read" id="tr'+k+'"><div class="t-rface"><div class="rno">'+c.no+'</div><div class="rnm">'+c.cn+'</div></div>'+
+         '<div class="t-rbody"><div class="t-rrole">'+(k+1)+' · '+roles[k]+'</div><div class="t-rtext">'+txt[k]+'</div></div></div>';
+  });
+  const a=tPick[0].c, b=tPick[1].c, c=tPick[2].c;
+  h += '<div class="t-fin" id="tFin"><div class="ft">今天怎么穿</div><b>'+a.vibe+'</b> 的调子，避开 <b>'+b.avoid.join(' / ')+'</b>，主色走 <b>'+c.colors.join(' / ')+'</b>，最后加上 '+c.tip+'。</div>';
+  const res = matchOutfit(a.vibe, c.colors, b.avoid);
+  state.lastItems = res;
+  h += '<div class="outfit" style="margin-top:14px">';
+  res.slice(0,4).forEach(it=>{
+    h += '<div class="oitem" style="background:'+it.color+'"><div class="oslot">'+it.cat+'</div><div class="oit">'+icon(it.cat, it.text, 40)+'</div><div class="onm" style="color:'+it.text+';text-shadow:none">'+it.name+'</div></div>';
+  });
+  h += '</div>';
+  h += '<button class="btn" onclick="go(\'result\')">就穿这套，去搭配</button>';
+  document.getElementById('s-tread').innerHTML = h;
+  tPick.forEach((p,k)=>{ const el=document.getElementById('tr'+k); if(el) setTimeout(()=>el.classList.add('on'), 100+k*150); });
+  const fin=document.getElementById('tFin'); if(fin){ fin.style.opacity=0; fin.style.transition='opacity .45s ease'; setTimeout(()=>fin.style.opacity=1, 560); }
+}
+
+/* ============ 刮刮乐 ============ */
+function renderScratch(){
+  const pool = [['简约',['米白','浅蓝'],['正红']],['文艺',['雾紫','米白'],['亮黄']],
+                ['甜美',['奶油白','玫粉'],['炭灰']],['运动',['牛仔蓝','米白'],['酒红']]];
+  const p = pool[Math.floor(Math.random()*pool.length)];
+  state.scratchPick = {style:p[0], colors:p[1], avoid:p[2]};
+  const res = matchOutfit(p[0], p[1], p[2]);
+  let h = '<div class="h2">刮开看看今天穿什么</div><div class="h2sub">用鼠标或手指，在下面灰色涂层上刮。</div>';
+  h += '<div class="sc-wrap"><div class="sc-under">';
+  res.slice(0,3).forEach(it=>{
+    h += '<div class="pw" style="background:'+it.color+'"></div>';
+  });
+  h += '</div><canvas class="sc-canvas" id="scv"></canvas></div>';
+  h += '<div class="sc-hint" id="scHint">刮开约一半就会自动揭晓 →</div>';
+  h += '<button class="btn" id="scBtn" style="opacity:.4;pointer-events:none" onclick="doScratch()">看看今天穿这套</button>';
+  document.getElementById('s-scratch').innerHTML = h;
+}
+let scDrawn = 0, scTotal = 1;
+function initScratch(){
+  const cv = document.getElementById('scv');
+  if(!cv) return;
+  scDrawn = 0;
+  const w = cv.offsetWidth, hh = cv.offsetHeight;
+  cv.width = w; cv.height = hh;
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#C9C9D1'; ctx.fillRect(0,0,w,hh);
+  ctx.fillStyle = 'rgba(255,255,255,.55)';
+  ctx.font = '600 12px -apple-system,sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('刮 开 有 惊 喜', w/2, hh/2);
+  ctx.globalCompositeOperation = 'destination-out';
+  let down = false;
+  const erase = (x,y)=>{
+    ctx.beginPath(); ctx.arc(x,y,17,0,Math.PI*2); ctx.fill();
+    scDrawn++;
+    if(scDrawn > 26 && !cv.dataset.done){
+      cv.dataset.done = '1';
+      document.getElementById('scHint').textContent = '揭晓了！';
+      const b = document.getElementById('scBtn');
+      b.style.opacity='1'; b.style.pointerEvents='auto';
+    }
+  };
+  const pos = (e)=>{
+    const r = cv.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return [t.clientX-r.left, t.clientY-r.top];
+  };
+  cv.addEventListener('mousedown', e=>{down=true; erase(...pos(e));});
+  cv.addEventListener('mousemove', e=>{if(down) erase(...pos(e));});
+  window.addEventListener('mouseup', ()=>{down=false;});
+  cv.addEventListener('touchstart', e=>{e.preventDefault(); erase(...pos(e));}, {passive:false});
+  cv.addEventListener('touchmove', e=>{e.preventDefault(); erase(...pos(e));}, {passive:false});
+}
+function doScratch(){
+  const p = state.scratchPick;
+  state.constraints = {style:p.style, colors:p.colors, avoid:p.avoid,
+    summary:'刮刮乐 · 风格 <b>'+p.style+'</b> · 色系 <b>'+p.colors.join(' / ')+'</b>'};
+  state.reading = '没有理由，就是它了。今天这套你平时可能不会选，但穿上会有点惊喜。';
+  state.source = '刮刮乐';
+  rejected = [];
+  go('result');
+}
+
+/* ============ 搭配引擎（简化版） ============ */
+function matchOutfit(style, colors, avoid){
+  const score = it=>{
+    let s = 0;
+    if(it.style === style) s += 4;
+    if(colors.indexOf(it.color) >= 0) s += 2;
+    if(avoid && avoid.indexOf(it.color) >= 0) s -= 9;
+    s += Math.random()*0.6;
+    return s;
+  };
+  const ranked = WARDROBE.slice().sort((a,b)=>score(b)-score(a));
+  const taken = [];
+  const used = {};
+  const need = ['连衣裙','上装','下装','外套','鞋','配饰'];
+  let dressFirst = ranked[0] && ranked[0].cat === '连衣裙';
+  const slots = dressFirst ? ['连衣裙','鞋','外套','配饰'] : ['上装','下装','鞋','配饰'];
+  slots.forEach(sl=>{
+    const pick = ranked.find(it=>it.cat===sl && !used[it.id] &&
+      !rejected.some(r=>r.id===it.id) &&
+      taken.every(t=>Math.abs(t.id-it.id)>0));
+    if(pick){ used[pick.id]=1; taken.push(pick); }
+  });
+  while(taken.length < 4){
+    const pick = ranked.find(it=>!used[it.id]);
+    if(!pick) break;
+    used[pick.id]=1; taken.push(pick);
+  }
+  return taken;
+}
+
+/* ============ 结果页 ============ */
+function renderResult(){
+  const c = state.constraints;
+  if(!c) { go('home'); return; }
+  const items = matchOutfit(c.style, c.colors, c.avoid);
+  state.lastItems = items;
+  let h = '<div class="cons">'+c.summary+'</div>';
+  h += '<div class="outfit">';
+  items.forEach(it=>{
+    h += '<div class="oitem" style="background:'+it.color+'">'+
+         '<div class="oslot">'+it.cat+'</div>'+
+         '<div class="oit">'+icon(it.cat, it.text, 40)+'</div>'+
+         '<div class="onm" style="color:'+it.text+';text-shadow:none">'+it.name+'</div></div>';
+  });
+  h += '</div>';
+  h += '<div class="rvcard"><div class="rq">来自「'+state.source+'」的解读</div><div class="rt">'+state.reading+'</div></div>';
+  h += '<div class="row2"><button class="btn ghost" onclick="shuffle()">换一套</button>'+
+       '<button class="btn" onclick="go(\'home\')">换个板块</button></div>';
+  document.getElementById('s-result').innerHTML = h;
+}
+function shuffle(){
+  if(state.lastItems){
+    const drop = state.lastItems[Math.floor(Math.random()*state.lastItems.length)];
+    if(drop) rejected.push(drop);
+  }
+  renderResult();
+}
+
+/* ============ 启动 ============ */
+go('home');
+</script>
+</body>
+</html>

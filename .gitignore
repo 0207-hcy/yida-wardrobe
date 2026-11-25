@@ -1,0 +1,29 @@
+# 依赖与构建产物
+node_modules/
+.venv/
+build/
+dist/
+*.apk
+*.aab
+
+# 凭据（永不入库）
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+keystore.properties
+
+# 运行期 / 缓存产物
+cache/
+uploads/
+__pycache__/
+*.pyc
+outputs/
+server_out.txt
+test_out.txt
+_pip_install*.log
+
+# 本机 / 编辑器
+.DS_Store
+Thumbs.db

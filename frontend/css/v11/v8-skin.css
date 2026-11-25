@@ -1,0 +1,70 @@
+/* 易搭 · V8 金色夜空皮肤 (2026-11-21)
+ * 目标：让「拿主意」(home) 与「衣库」(wardrobe) 呈现 V8 截图那套深空金色夜空视觉。
+ * 原则：作用域严格限定，只碰 .yd-home / .yd-wardrobe 与氛围层；绝不定义 .pl-* / .pf-*，
+ *       广场与个人主页 100% 不受影响。复用的悬挂卡/信息流/衣库/夜空样式项目里本就存在。
+ * 加载顺序：在 product.css 之后、plaza.css 之前（见 index.html）。
+ */
+
+/* ============ 1) 放开被 product.css:9 压制的星空氛围层 ============ */
+/* product.css 用 .theme-motion-layer/.theme-atmosphere{opacity:.13!important} 把它们压暗了。
+   这里用同等强度的选择器 + !important 恢复，仅 space 主题生效（截图那套就是 space）。 */
+:root[data-theme="space"] .theme-motion-layer,
+:root[data-theme="space"] .theme-atmosphere{opacity:1!important}
+/* 星空动效恢复（同样只在 space 下） */
+:root[data-theme="space"] .light-dust,
+:root[data-theme="space"] .light-fourstar,
+:root[data-theme="space"] .dark-meteor,
+:root[data-theme="space"] .dark-glow{animation:none}
+:root[data-theme="space"] .dark-meteor{display:block}
+/* 首页场景：夜空场景图全显（visual-v8.css 已有规则，这里提高优先级确保在 product.css 之后仍生效） */
+:root[data-theme="space"] .phone[data-scene="home"] .atmosphere-scene{opacity:1!important}
+/* 衣库场景：夜空氛围淡入作为底衬，不喧宾夺主 */
+:root[data-theme="space"] .phone[data-scene="wardrobe"] .atmosphere-scene{opacity:.16!important}
+
+/* ============ 2) 首页 · 拿主意 金色夜空 ============ */
+.yd-home{position:relative;padding:0 0 30px}
+/* 顶部两个胶囊：我的 / 主题切换 */
+.v8-quick{position:absolute;left:19px;right:19px;top:6px;z-index:7;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
+.v8-quick button{pointer-events:auto;display:flex;align-items:center;gap:5px;min-height:32px;border:1px solid rgba(217,173,106,.31);border-radius:999px;background:rgba(28,28,31,.61);backdrop-filter:blur(10px);color:var(--text);padding:5px 11px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.19)}
+.v8-quick button:hover{border-color:var(--accent)}
+.v8-quick .v8-qico{font-size:13px;color:var(--accent)}
+/* 标题天空区：不设固定高度，让夜空背景从顶部自然铺开 */
+.yd-home .v8-sky{position:relative;padding:58px 26px 0;text-align:left}
+.v8-sky .v8-spark{position:absolute;right:19%;top:60px;font-size:22px;color:var(--accent);animation:v8Breathe 4.5s ease-in-out infinite alternate}
+.yd-home .v8-title{font:700 clamp(31px,8.4vw,39px)/1.14 var(--yd-serif);letter-spacing:.02em;margin:0;color:var(--text);text-shadow:0 2px 18px rgba(0,0,0,.35)}
+.yd-home .v8-title span{font-size:.53em;color:var(--accent);vertical-align:top}
+.v8-sub{margin:9px 0 0;font:400 14px/1.5 var(--yd-serif);letter-spacing:.07em;color:var(--muted)}
+/* 天气胶囊：可点选穿搭日期，内嵌透明 date input */
+.v8-weather{position:relative;margin:17px 0 0;width:max-content;max-width:100%;min-height:43px;padding:0 15px;display:flex;align-items:center;gap:8px;border-radius:999px;border:1px solid rgba(210,171,106,.43);background:rgba(42,41,40,.7);backdrop-filter:blur(10px);color:#e9c689;font-size:12px;font-weight:700;box-shadow:0 2px 19px rgba(206,157,74,.12);overflow:hidden;cursor:pointer}
+.v8-weather .v8-sun{font-size:19px;line-height:1}
+.v8-weather input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+/* 悬挂金色卡轨道：复用 visual-v8.css 的 .card-stack/.stack-viewport/.stack-card */
+.v8-stack{margin-top:6px}
+.v8-stack .stack-viewport{touch-action:pan-x;cursor:grab}
+.v8-stack .stack-viewport.dragging{cursor:grabbing}
+.v8-stack .stack-viewport.dragging .stack-card{cursor:grabbing}
+/* 穿搭灵感信息流：复用 visual-v8.css 的 .home-feed/.feed-post/.feed-section-head/.linkbtn */
+.v8-feed{padding:0 20px 10px}
+.v8-feed .feed-section-head b{color:var(--text)}
+.v8-feed .linkbtn{color:var(--accent)}
+:root[data-theme="space"] .v8-feed .feed-post{background:rgba(28,28,31,.74);border-color:rgba(217,173,106,.22);box-shadow:0 8px 22px rgba(0,0,0,.22)}
+/* 首页顶部不显示返回键以外的 navbar 边框感，交给夜空 */
+.phone[data-scene="home"] .navbar{background:transparent;border-bottom-color:rgba(217,173,106,.14)}
+:root[data-theme="space"] .phone[data-scene="home"] .navbar{background:linear-gradient(180deg,rgba(10,10,14,.55),transparent);border-bottom:0}
+
+/* ============ 3) 衣库 · 金色夜空 ============ */
+.yd-wardrobe{position:relative}
+.yd-wardrobe .yd-page-heading h1{color:var(--text)}
+.yd-wardrobe .yd-page-heading .yd-eyebrow{color:var(--accent)}
+/* 衣橱卡片在 space 下用金色调（visual-v5.css 已有深色径向底，这里补边框金晕） */
+:root[data-theme="space"] .yd-wardrobe .yd-garment>div{border:1px solid rgba(217,173,106,.22);box-shadow:0 10px 24px rgba(0,0,0,.42)}
+:root[data-theme="space"] .yd-wardrobe .yd-segments{background:rgba(28,28,31,.7);border:1px solid rgba(217,173,106,.18)}
+:root[data-theme="space"] .yd-wardrobe .yd-segments .on{background:rgba(217,173,106,.16);color:var(--text)}
+:root[data-theme="space"] .yd-wardrobe .yd-filter button{border-color:rgba(217,173,106,.26);color:var(--muted)}
+:root[data-theme="space"] .yd-wardrobe .yd-filter .on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+
+/* ============ 4) 金色调细节（首页与衣库共用，不影响广场） ============ */
+@keyframes v8Breathe{from{opacity:.45;transform:translateY(0)}to{opacity:.95;transform:translateY(-4px)}}
+@media(prefers-reduced-motion:reduce){.v8-spark{animation:none}}
+/* 小屏收敛 */
+@media(max-width:420px){.yd-home .v8-sky{padding:56px 22px 0}.v8-feed{padding:0 16px 10px}}

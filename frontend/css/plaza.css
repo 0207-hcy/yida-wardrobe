@@ -1,0 +1,144 @@
+/* 易搭 · 广场 Plaza — 微博风格图文信息流
+ * 复用 theme-tokens.css 的 --text/--muted/--line/--elev/--accent 等变量，兼容 flow / space 双主题。
+ */
+.pl-page{padding:14px 0 26px}
+.pl-head{padding:8px 4px 10px;border-bottom:1px solid var(--line)}
+.pl-head h1{margin:0;font:700 26px/1.2 var(--serif);letter-spacing:.5px;color:var(--text)}
+.pl-head-sub{display:block;font-size:10px;color:var(--muted)}
+.pl-body{padding:0 12px}
+
+/* 发布条 / 发布框 */
+.pl-compose-bar{display:flex;align-items:center;gap:10px;width:100%;margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:16px;background:var(--elev);box-shadow:var(--shadow);cursor:pointer;text-align:left}
+.pl-compose-ph{flex:1;font-size:12px;color:var(--muted)}
+.pl-compose-btn{border:0;border-radius:999px;padding:8px 15px;background:var(--accent);color:var(--on-accent);font-size:11px;font-weight:800;cursor:pointer}
+.pl-avatar{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:15px;font-weight:700;border:1px solid rgba(255,255,255,.25)}
+.pl-composer{margin-top:12px;padding:13px;border:1px solid var(--line);border-radius:16px;background:var(--elev);box-shadow:var(--shadow)}
+.pl-composer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.pl-composer-top b{font-size:13px;color:var(--text)}
+.pl-close{border:0;background:none;color:var(--muted);font-size:11px;cursor:pointer;padding:4px}
+.pl-textarea{width:100%;min-height:78px;resize:vertical;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);font:13px/1.6 inherit;padding:10px 11px;outline:none;box-sizing:border-box}
+.pl-textarea:focus{border-color:var(--accent)}
+.pl-textarea::placeholder,.pl-taginput::placeholder,.pl-cmt-input::placeholder{color:var(--muted)}
+.pl-thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pl-thumb{position:relative;width:66px;height:66px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.pl-thumb img{width:100%;height:100%;object-fit:cover}
+.pl-thumb button{position:absolute;top:2px;right:2px;width:18px;height:18px;border:0;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:1;cursor:pointer}
+.pl-addimg{width:66px;height:66px;border:1px dashed var(--line);border-radius:10px;background:var(--bg);color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}
+.pl-addimg svg{width:22px;height:22px}
+.pl-addimg small{font-size:9px}
+.pl-composer-row{display:flex;align-items:center;gap:8px;margin-top:10px}
+.pl-taginput{flex:1;min-width:0;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--text);font-size:11px;padding:9px 12px;outline:none}
+.pl-taginput:focus{border-color:var(--accent)}
+.pl-publish{border:0;border-radius:999px;padding:9px 20px;background:var(--accent);color:var(--on-accent);font-size:12px;font-weight:800;cursor:pointer}
+
+/* 关注 / 推荐 tab */
+.pl-tabs{display:flex;gap:20px;margin-top:14px;padding:0 4px;border-bottom:1px solid var(--line)}
+.pl-tabs button{position:relative;border:0;background:none;color:var(--muted);font-size:13px;font-weight:700;padding:9px 2px 11px;cursor:pointer}
+.pl-tabs button.on{color:var(--text)}
+.pl-tabs button.on:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;border-radius:3px;background:var(--accent)}
+
+/* 信息流卡片 */
+.pl-feed{padding-bottom:10px}
+.pl-post{padding:13px 12px 6px;margin-top:12px;border:1px solid var(--line);border-radius:16px;background:var(--elev);box-shadow:var(--shadow)}
+.pl-post-head{display:flex;align-items:center;gap:9px}
+.pl-post-user{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pl-post-user b{font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px}
+.pl-post-user small{font-size:10px;color:var(--muted)}
+.pl-mine{font-style:normal;font-size:9px;font-weight:700;color:var(--on-accent);background:var(--accent);border-radius:4px;padding:1px 5px}
+.pl-follow{flex:none;border:1px solid var(--accent);border-radius:999px;background:transparent;color:var(--accent);font-size:10px;font-weight:700;padding:5px 11px;cursor:pointer}
+.pl-follow.on{border-color:var(--line);color:var(--muted)}
+.pl-follow.mine{border-color:var(--line);color:var(--muted)}
+.pl-topic{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;color:var(--accent)}
+.pl-text{margin:8px 0 0;font-size:12.5px;line-height:1.75;color:var(--text);word-break:break-word}
+
+/* 九宫格图片 */
+.pl-grid{display:grid;gap:5px;margin-top:10px;border-radius:12px;overflow:hidden}
+.pl-grid.g1{grid-template-columns:1fr;max-width:100%}
+.pl-grid.g2{grid-template-columns:repeat(2,1fr)}
+.pl-grid.g3{grid-template-columns:repeat(3,1fr)}
+.pl-grid.g4{grid-template-columns:repeat(2,1fr)}
+.pl-grid-item{margin:0;overflow:hidden;border-radius:8px;background:var(--image-well)}
+.pl-grid.g1 .pl-grid-item img{width:100%;max-height:300px;object-fit:cover}
+.pl-grid:not(.g1) .pl-grid-item{aspect-ratio:1}
+.pl-grid-item img{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+
+/* 互动操作栏 */
+.pl-actions{display:flex;align-items:center;justify-content:space-between;gap:2px;margin-top:9px;padding-top:7px;border-top:1px solid var(--line)}
+.pl-act{display:flex;align-items:center;gap:5px;flex:1;justify-content:center;border:0;background:none;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;padding:8px 2px;border-radius:8px;transition:color .18s ease,background-color .18s ease}
+.pl-act svg{width:17px;height:17px}
+.pl-act:hover{background:color-mix(in srgb,var(--accent) 8%,transparent);color:var(--accent)}
+.pl-act.on{color:var(--accent)}
+.pl-act.on svg{fill:color-mix(in srgb,var(--accent) 28%,transparent)}
+
+/* 评论区 */
+.pl-comments{display:none;margin-top:4px;padding:9px 2px 2px}
+.pl-comments.open{display:block}
+.pl-cmt-list{border-top:1px dashed var(--line);padding-top:8px}
+.pl-cmt-empty{margin:2px 0;font-size:11px;color:var(--muted)}
+.pl-cmt{display:flex;gap:8px;margin-bottom:10px}
+.pl-cmt-avatar{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700}
+.pl-cmt-body{flex:1;min-width:0}
+.pl-cmt-body b{font-size:11px;color:var(--text)}
+.pl-cmt-body p{margin:2px 0;font-size:11.5px;line-height:1.6;color:var(--text);word-break:break-word}
+.pl-cmt-body small{font-size:9px;color:var(--muted)}
+.pl-cmt-form{display:flex;gap:7px;margin-top:6px}
+.pl-cmt-input{flex:1;min-width:0;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--text);font-size:11px;padding:8px 12px;outline:none}
+.pl-cmt-input:focus{border-color:var(--accent)}
+.pl-cmt-send{border:0;border-radius:999px;padding:8px 14px;background:var(--accent);color:var(--on-accent);font-size:11px;font-weight:700;cursor:pointer}
+
+/* 空状态 / 页脚 */
+.pl-empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.pl-empty span{font-size:34px;color:var(--accent)}
+.pl-empty h2{margin:10px 0 5px;font-size:15px;color:var(--text)}
+.pl-empty p{margin:0;font-size:11px}
+.pl-footnote{text-align:center;font-size:9px;color:var(--muted);margin:18px 0 6px;opacity:.8}
+
+/* 大图查看 */
+.pl-lightbox{position:absolute;inset:0;z-index:2000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.pl-lightbox img{max-width:94%;max-height:82%;object-fit:contain}
+.pl-lightbox-close{border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:999px;padding:8px 22px;font-size:12px;cursor:pointer}
+
+/* 广场页隐藏右上角主题按钮，与早期约定一致 */
+.phone:has(.pl-page) #navRight{visibility:hidden}
+
+/* 双主题细节 */
+:root[data-theme="space"] .pl-post,:root[data-theme="space"] .pl-compose-bar,:root[data-theme="space"] .pl-composer{background:rgba(28,28,31,.82);border-color:rgba(217,173,106,.22)}
+:root[data-theme="space"] .pl-grid-item{background:#1b1b1e}
+:root[data-theme="space"] .pl-act.on svg{fill:rgba(212,184,150,.35)}
+
+@media(prefers-reduced-motion:reduce){.pl-act{transition:none}}
+
+/* ===== 个人主页（微博式） ===== */
+.pf-page{padding:0 0 26px}
+.pf-cover{height:118px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 55%,var(--surface)),color-mix(in srgb,var(--accent2) 70%,var(--elev)));position:relative;overflow:hidden}
+.pf-cover:after{content:"✦";position:absolute;right:20px;top:18px;font-size:52px;color:rgba(255,255,255,.28)}
+:root[data-theme="space"] .pf-cover{background:linear-gradient(135deg,#3a2f22,#171719);border-bottom:1px solid rgba(217,173,106,.22)}
+.pf-body{padding:0 12px}
+.pf-head{display:flex;align-items:flex-end;gap:12px;margin-top:-38px;position:relative;z-index:1}
+.pf-avatar{flex:none;width:76px;height:76px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:30px;font-weight:700;border:3px solid var(--elev);box-shadow:var(--shadow)}
+.pf-head-info{padding-bottom:6px;min-width:0}
+.pf-head-info h1{margin:0;font:700 19px/1.2 var(--serif);color:var(--text);display:flex;align-items:center;gap:6px}
+.pf-head-info small{font-size:10px;color:var(--muted)}
+.pf-bio{margin:12px 2px 14px;font-size:11.5px;line-height:1.6;color:var(--muted)}
+.pf-stats{display:flex;gap:4px;padding:12px 0;border-block:1px solid var(--line)}
+.pf-stats>div{flex:1;text-align:center;background:color-mix(in srgb,var(--elev) 70%,transparent);border-radius:10px;padding:8px 2px}
+.pf-stats b{display:block;font:700 18px/1.2 var(--serif);color:var(--text)}
+.pf-stats span{display:block;font-size:9px;color:var(--muted);margin-top:4px}
+.pf-follow,.pf-edit{display:block;width:100%;margin-top:13px;border:1px solid var(--accent);border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:12px;font-weight:800;padding:10px;cursor:pointer}
+.pf-follow.on{background:transparent;color:var(--muted);border-color:var(--line)}
+.pf-edit{background:transparent;color:var(--accent)}
+.pf-tabs{display:flex;gap:20px;margin-top:16px;padding:0 4px;border-bottom:1px solid var(--line)}
+.pf-tabs button{position:relative;border:0;background:none;color:var(--muted);font-size:13px;font-weight:700;padding:9px 2px 11px;cursor:pointer}
+.pf-tabs button.on{color:var(--text)}
+.pf-tabs button.on:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;border-radius:3px;background:var(--accent)}
+.pf-tabs small{font-size:9px;color:var(--muted);font-weight:400}
+/* 个人主页里复用的帖子卡片：头像/昵称可点 */
+.pl-profile-link{border:0;cursor:pointer;padding:0;font-family:inherit}
+.pl-user-link{border:0;background:none;padding:0;cursor:pointer;text-align:left;color:inherit;font-family:inherit}
+.pl-user-link b{color:var(--text)}
+.pl-user-link:hover b{color:var(--accent)}
+
+/* 「我的」页：可点的资料区 + 广场入口 */
+.yd-profile-btn{width:100%;border:0;background:none;text-align:left;color:inherit;cursor:pointer;position:relative;font-family:inherit;padding-left:0;padding-right:0}
+.yd-profile-arrow{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:10px;font-weight:600;color:var(--accent)}
+.yd-plaza-entry b{color:var(--accent)}

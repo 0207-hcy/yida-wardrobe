@@ -1,0 +1,75 @@
+/* 易搭 · V8 五玩法页样式（社交电量 / 身份扮演 / 跃然搭配）
+ * 作用域严格限定 .yd-energy-page / .yd-identity-page / .yd-input-page，
+ * 不定义任何 .pl-* / .pf-*，广场与个人主页完全不受影响。
+ * 手机优先，space / flow 双主题。加载顺序：product.css、v8-skin.css 之后，plaza.css 之前。 */
+
+:root{
+  --yd-game-card:rgba(255,255,255,.82);
+  --yd-game-border:rgba(115,87,217,.22);
+  --yd-game-soft:rgba(115,87,217,.08);
+  --yd-game-ink:#302A3D;
+  --yd-game-muted:#756E80;
+  --yd-game-accent:#735C92;
+}
+:root[data-theme="space"]{
+  --yd-game-card:rgba(34,34,37,.84);
+  --yd-game-border:rgba(212,184,150,.30);
+  --yd-game-soft:rgba(212,184,150,.10);
+  --yd-game-ink:#F4EEE6;
+  --yd-game-muted:#B7AEAA;
+  --yd-game-accent:#D6B580;
+}
+:root[data-theme="flow"]{
+  --yd-game-card:rgba(255,255,255,.86);
+  --yd-game-border:rgba(115,87,217,.22);
+  --yd-game-soft:rgba(115,87,217,.08);
+  --yd-game-ink:#302A3D;
+  --yd-game-muted:#756E80;
+  --yd-game-accent:#735C92;
+}
+
+/* ---------- 社交电量 ---------- */
+.yd-energy-page .yd-page-heading{margin-bottom:24px}
+.yd-energy-card{padding:22px 16px 16px;border:1px solid var(--yd-game-border);border-radius:20px;background:var(--yd-game-card);box-shadow:var(--shadow);text-align:center}
+.yd-energy-display{display:flex;align-items:baseline;justify-content:center;gap:7px;margin-bottom:16px}
+.yd-energy-display strong{font:500 52px/1 var(--yd-serif);color:var(--yd-game-accent)}
+.yd-energy-display span{font-size:12px;color:var(--yd-game-muted)}
+#energy-range{display:block;width:100%;height:36px;margin:0;padding:0;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer;touch-action:pan-y}
+#energy-range::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:linear-gradient(90deg,var(--yd-game-accent) var(--fill,50%),var(--yd-game-soft) var(--fill,50%))}
+#energy-range::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-10px;border-radius:50%;border:4px solid var(--yd-game-card);background:var(--yd-game-accent);box-shadow:0 2px 12px rgba(0,0,0,.28)}
+#energy-range::-moz-range-track{height:6px;border-radius:999px;background:var(--yd-game-soft)}
+#energy-range::-moz-range-progress{height:6px;border-radius:999px;background:var(--yd-game-accent)}
+#energy-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;border:4px solid var(--yd-game-card);background:var(--yd-game-accent)}
+.yd-energy-scale{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--yd-game-muted)}
+.yd-energy-page .yd-energy-explain{margin:16px 2px 0;padding:13px 15px;border:1px solid var(--yd-game-border);border-radius:12px;background:var(--yd-game-soft);font-size:12px;line-height:1.8;color:var(--yd-game-ink)}
+.yd-energy-page>.aw-button{margin-top:18px}
+
+/* ---------- 身份扮演 ---------- */
+.yd-identity-groups{display:grid;grid-template-columns:1fr;gap:11px}
+@media(min-width:350px){.yd-identity-groups{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.yd-identity-group{padding:11px 10px;border:1px solid var(--yd-game-border);border-radius:16px;background:var(--yd-game-card)}
+.yd-identity-group h2{margin:0 0 9px;padding-left:2px;font:600 11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.1em;color:var(--yd-game-accent)}
+.yd-identity-options{display:flex;flex-direction:column;gap:7px}
+.yd-identity-option{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;min-height:56px;padding:8px 9px;border:1px solid var(--yd-game-border);border-radius:11px;background:transparent;color:var(--yd-game-ink);text-align:left;transition:border-color .16s,background .16s}
+.yd-identity-option.on{border-color:var(--yd-game-accent);background:var(--yd-game-soft)}
+.yd-identity-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.yd-identity-copy b{font-size:13px;font-weight:600;line-height:1.3}
+.yd-identity-copy small{font-size:9px;line-height:1.5;color:var(--yd-game-muted)}
+.yd-identity-mark{flex:none;width:20px;height:20px;border-radius:50%;border:1px solid var(--yd-game-border);display:grid;place-items:center;font-size:11px;color:var(--yd-game-accent)}
+.yd-identity-option.on .yd-identity-mark{background:var(--yd-game-accent);border-color:var(--yd-game-accent);color:var(--yd-game-card)}
+.yd-identity-page .yd-identity-current{margin:20px 0 10px;font-size:11px;color:var(--yd-game-muted)}
+.yd-identity-current b{color:var(--yd-game-accent)}
+
+/* ---------- 跃然搭配 ---------- */
+.yd-input-textarea{display:block;width:100%;min-height:112px;resize:vertical;padding:14px;border:1px solid var(--yd-game-border);border-radius:14px;background:var(--yd-game-card);color:var(--yd-game-ink);font-family:inherit;font-size:13px;line-height:1.8;outline:none}
+.yd-input-textarea::placeholder{color:var(--yd-game-muted)}
+.yd-input-textarea:focus{border-color:var(--yd-game-accent)}
+.yd-input-examples{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0 16px}
+.yd-input-example{min-height:34px;padding:7px 11px;border:1px solid var(--yd-game-border);border-radius:999px;background:var(--yd-game-soft);color:var(--yd-game-muted);font-size:10px;line-height:1.5}
+.yd-input-example:hover,.yd-input-example:focus-visible{border-color:var(--yd-game-accent);color:var(--yd-game-accent)}
+.yd-input-summary{padding:12px 14px;border:1px dashed var(--yd-game-border);border-radius:12px;margin-bottom:18px}
+.yd-input-summary-label{display:block;margin-bottom:6px;font-size:9px;letter-spacing:.12em;color:var(--yd-game-muted)}
+.yd-input-summary .yd-tag-row{margin:0}
+.yd-input-summary .yd-tag-row .yd-input-empty{font-size:10px;color:var(--yd-game-muted)}
+
+@media(prefers-reduced-motion:reduce){.yd-identity-option{transition:none}}

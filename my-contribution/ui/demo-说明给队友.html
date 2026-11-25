@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>电子衣柜 Demo · 逻辑与内容清单（给队友）</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#F7F7FA;font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1F2328;-webkit-font-smoothing:antialiased;line-height:1.7;padding:40px 20px 80px}
+.doc{max-width:880px;margin:0 auto;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:18px;padding:44px 48px 56px;box-shadow:0 8px 34px rgba(20,20,45,.06)}
+h1{font-size:25px;font-weight:600;letter-spacing:-.4px;margin-bottom:8px}
+.lede{font-size:14px;color:#5A5A66;line-height:1.8;margin-bottom:20px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:34px}
+.badge{font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:.2px}
+.b1{background:#EEEDFE;color:#534AB7}
+.b2{background:#FAEEDA;color:#854F0B}
+.b3{background:#E1F5EE;color:#0F6E56}
+.b4{background:#FBEAF0;color:#993556}
+h2{font-size:17px;font-weight:600;letter-spacing:-.2px;margin:44px 0 6px;padding-top:26px;border-top:1px solid rgba(0,0,0,.07)}
+h2:first-of-type{border-top:none;padding-top:0;margin-top:0}
+h2 .num{display:inline-block;min-width:26px;height:26px;line-height:26px;text-align:center;background:#EEEDFE;color:#534AB7;border-radius:8px;font-size:13px;margin-right:9px;vertical-align:2px}
+h3{font-size:14px;font-weight:600;margin:26px 0 9px;color:#2C2C2A}
+p{font-size:13.5px;color:#3F3F46;margin-bottom:10px}
+.sub{font-size:12.5px;color:#8A8A93;margin-bottom:16px;line-height:1.75}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin:14px 0 6px}
+th{background:#FAFAFC;font-weight:600;text-align:left;padding:9px 11px;border:1px solid rgba(0,0,0,.07);color:#4B5563;font-size:12px;white-space:nowrap}
+td{padding:9px 11px;border:1px solid rgba(0,0,0,.07);vertical-align:top;color:#3F3F46;line-height:1.6}
+td b{font-weight:600;color:#1F2328}
+code{background:#F4F4F7;padding:1.5px 6px;border-radius:5px;font-family:"SF Mono",Consolas,monospace;font-size:11.5px;color:#534AB7}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-right:4px;white-space:nowrap}
+.live{background:#E1F5EE;color:#0F6E56}
+.gray{background:#F2F2F7;color:#9A9AA5}
+.stub{background:#FAEEDA;color:#854F0B}
+.callout{background:#FAFAFC;border-left:3px solid #6D5BD0;border-radius:0 12px 12px 0;padding:15px 18px;margin:18px 0;font-size:13px;line-height:1.75;color:#3F3F46}
+.callout.warn{background:#FEFAF2;border-left-color:#BA7517}
+.callout.good{background:#F4FBF8;border-left-color:#1D9E75}
+.callout b{font-weight:600;color:#1F2328}
+ul{margin:8px 0 14px 20px}
+li{font-size:13.5px;color:#3F3F46;margin-bottom:6px;line-height:1.7}
+li b{font-weight:600;color:#1F2328}
+.struct{background:#FAFAFC;border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:24px;margin:18px 0;overflow-x:auto}
+.diagram{font-family:"SF Mono",Consolas,monospace;font-size:11.5px;line-height:1.9;color:#3F3F46;white-space:pre}
+.diagram .l1{color:#534AB7;font-weight:700}
+.diagram .l2{color:#993556;font-weight:700}
+.diagram .l3{color:#0F6E56}
+.diagram .dim{color:#B4B2A9}
+.flow{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin:12px 0 18px}
+.flow span{font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:20px;background:#EEEDFE;color:#534AB7}
+.flow i{color:#C4C4CC;font-style:normal;font-size:12px}
+.tagrow{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.tagrow b{font-size:11.5px;font-weight:600;padding:4px 11px;border-radius:20px;background:#FAFAFC;border:1px solid rgba(0,0,0,.07);color:#4B5563}
+.tagrow b.k{background:#EEEDFE;border-color:#CECBF6;color:#534AB7}
+.foot{margin-top:46px;padding-top:22px;border-top:1px solid rgba(0,0,0,.07);font-size:11.5px;color:#A1A1AA;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<h1>电子衣柜 · Demo 逻辑与内容清单</h1>
+<div class="lede">这份文档把目前原型里<b>所有能点的东西、背后的数据、以及每条交互的来龙去脉</b>列清楚。看这一份就够，不用去翻代码。</div>
+<div class="badges">
+  <span class="badge b1">单文件静态原型 · 390×800</span>
+  <span class="badge b2">模型部分是打桩，不是真 AI</span>
+  <span class="badge b3">11 个页面</span>
+  <span class="badge b4">四个板块 · 五种入口</span>
+</div>
+
+<div class="callout warn">
+<b>先说清一件事，免得开会时对不上。</b><br>
+这个 demo 是<b>纯静态 HTML + JavaScript</b>，一个文件、不联网、不调模型。凡是需要「读懂你」的地方（比如输入一句话后自动匹配），后台其实是张<b>关键词对照表</b>在假装 AI。<br>
+演示时请照实说是打桩——我们要证明的是<b>交互和结构成立</b>，不是「模型已经跑通」。
+</div>
+
+<h2><span class="num">1</span>我们做的是什么</h2>
+<p><b>一句话定位：</b>一个懂玄学的电子衣柜——拍下你的衣服，让抽卡和心情替你做决定。</p>
+<p><b>差异点不在搭配算法，在「决策入口」。</b>市面上的电子衣柜都是「你想穿什么 → 我帮你搭」；我们反过来：「你想不出来 → 我替你做决定」。</p>
+<div class="callout good">
+这一层必须在开场 30 秒内讲明白。<b>我们卖的是选择困难 + 情绪陪伴，不是搭配算法。</b>讲透了，项目就立住了；讲不透，评委会觉得「这不就是个搭配 App 吗」。
+</div>
+
+<h2><span class="num">2</span>三级信息架构</h2>
+<div class="sub">抽屉 → 板块 → 入口。三层各管一件事，队友记住这三层就行。</div>
+
+<div class="struct">
+<div class="diagram"><span class="l1">一级 · 侧边抽屉（三个大类）</span>
+  ├─ <span class="l1">拿主意</span>   <span class="dim">★★★★★ 核心 · 抽屉里唯一的 hero</span>
+  ├─ 我的衣柜   <span class="dim">（配套）放单品的地方</span>
+  └─ 广场       <span class="dim">（配套）看别人怎么决定</span>
+
+<span class="l1">二级 · 四个板块（点「拿主意」后挂衣杆上的四个）</span>
+  ├─ <span class="l2">抽取式</span>   交给看不见的力量    翻牌 · 刮开 · 摇签
+  ├─ <span class="l2">调节式</span>   说说你今天的状态    拖滑块 · 连续值 · 实时反馈
+  ├─ <span class="l2">选择式</span>   今天你想成为谁      点卡片 · 明确的主动决策
+  ├─ <span class="l2">输入式</span>   直接告诉它          打字 · 实时匹配
+  └─ <span class="dim">＋ 再加一个</span>  <span class="dim">虚线空位 → 点进去解释「板块可插拔」</span>
+
+<span class="l1">三级 · 具体入口（板块页里的卡片）</span>
+  └─ <span class="l3">塔罗牌</span> / <span class="l3">刮刮乐</span> / 盲盒（灰） / 抽签（灰） …
+     灰卡 = 这一版演示不做，用来证明「还能往上挂」</div>
+</div>
+
+<h3>为什么第二个大类叫「拿主意」而不是「帮我搭配」</h3>
+<ul>
+<li>这一层做的事是<b>「选一种决定方式」</b>，不是「AI 直接出搭配」。叫「帮我搭配」，用户点进去看到四个分类会落差。</li>
+<li>另外两项（我的衣柜 / 广场）都是名词，「拿主意」是动词短语，<b>三者在抽屉里排在一起更整齐</b>。</li>
+<li>备选名：今天听谁的 / 今天怎么定 / 挑个方式 / 决定台。</li>
+</ul>
+
+<h3>核心只有一个，另外两项怎么被「降级」的</h3>
+<p>没有给「拿主意」加特效，靠的是<b>把另外两项压下去</b>：抽屉里「拿主意」是 hero 卡片（大图标 + 大字 + 紫色底），下面一条分隔线 +「配套」标签，「我的衣柜」「广场」是小号灰字。视觉分级一做，主次自然就出来了。</p>
+<table>
+<tr><th>抽屉项</th><th>样式</th><th>说明文案</th><th>层级</th></tr>
+<tr><td><b>拿主意</b></td><td>hero · 紫色底 16px 粗体</td><td>抽 · 拖 · 点 · 说，选一种定今天</td><td>主入口</td></tr>
+<tr><td>我的衣柜</td><td>sub · 灰色 12.5px</td><td>放单品的地方</td><td>配套</td></tr>
+<tr><td>广场</td><td>sub · 灰色 12.5px</td><td>看别人怎么决定</td><td>配套</td></tr>
+</table>
+<p class="sub">抽屉底部固定一句：<b>「我们不做推荐。我们只帮你把今天定下来。」</b></p>
+
+<h2><span class="num">3</span>11 个页面清单</h2>
+<p class="sub">括号里是代码里的 id，方便和同学 A 对代码。</p>
+<table>
+<tr><th>#</th><th>页面</th><th>标题</th><th>作用</th><th>从哪进</th><th>上面能点什么</th></tr>
+<tr><td>1</td><td><b>拿主意</b>（s-home）</td><td>拿主意</td><td>首屏。四个板块挂在挂衣杆上，左右滑挑选</td><td>开屏 / 抽屉</td><td>滑杆换板块、点杆上的衣服、点天气芯片、进某个板块</td></tr>
+<tr><td>2</td><td>我的衣柜（s-closet）</td><td>我的衣柜</td><td>10 件单品格子墙，看已打标的衣服</td><td>抽屉</td><td>看单品（列表只读）</td></tr>
+<tr><td>3</td><td>板块页（s-entries）</td><td><i>动态取板块名</i></td><td>某个板块下的入口卡片流 + 一个 3 秒体感小样</td><td>首屏点板块</td><td>点入口卡（亮的能进，灰的不能点）</td></tr>
+<tr><td>4</td><td>扩展位（s-ext）</td><td>扩展位</td><td>解释「为什么留空位」：加板块只需三样东西</td><td>首屏点虚线空位</td><td>打开菜单</td></tr>
+<tr><td>5</td><td><b>命令栏</b>（s-input）</td><td>说一句话</td><td>输入式主页。打一句话 → 自动匹配方向</td><td>输入式 → 一句话日记</td><td>打字、点示例句、点结果卡</td></tr>
+<tr><td>6</td><td><b>广场</b>（s-plaza）</td><td>广场</td><td>别人的抽卡 / 穿搭动态流，三个筛选</td><td>抽屉 / 首屏右上</td><td>切筛选、点赞、点「我也拿一个主意」</td></tr>
+<tr><td>7</td><td>能量条（s-energy）</td><td>今日电量</td><td>拖滑块报电量，实时出状态文案</td><td>调节式 → 能量条</td><td>拖滑块、确认</td></tr>
+<tr><td>8</td><td>身份扮演（s-identity）</td><td>今天想成为谁</td><td>四张人设卡，选一个定基调</td><td>选择式 → 身份扮演</td><td>选卡、确认</td></tr>
+<tr><td>9</td><td><b>塔罗牌</b>（s-tarot）</td><td>抽一张牌</td><td>随机抽一张大阿尔卡纳，翻牌出牌义</td><td>抽取式 → 塔罗牌</td><td>点牌翻面、确认</td></tr>
+<tr><td>10</td><td>刮刮乐（s-scratch）</td><td>刮刮乐</td><td>Canvas 涂层，手刮到一半自动揭晓</td><td>抽取式 → 刮刮乐</td><td>刮开、确认</td></tr>
+<tr><td>11</td><td><b>结果页</b>（s-result）</td><td>今天穿这套</td><td>四件拼贴 + 约束摘要 + 一句解读</td><td>任意入口确认后</td><td>换一套、换个板块</td></tr>
+</table>
+
+<h3>所有入口最后都汇到同一页</h3>
+<div class="flow">
+<span>塔罗牌</span><i>→</i><span>刮刮乐</span><i>→</i><span>能量条</span><i>→</i><span>身份扮演</span><i>→</i><span>命令栏</span>
+<i>→ 统一产出「约束条件」→</i>
+<span>结果页</span>
+</div>
+<p class="sub">这是整个架构最关键的一点：<b>入口只负责把模糊念头翻译成约束，出搭配只有一套引擎。</b>加第七个板块不用改引擎。</p>
+
+<h2><span class="num">4</span>四个板块详解</h2>
+<p class="sub">每个板块 = 一种「交互范式」。四页各有各的体感，故意不做得一样。</p>
+<table>
+<tr><th>板块</th><th>一句话</th><th>交互范式</th><th>页面上的 3 秒体感</th><th>旗下入口（绿=能点 / 灰=占位）</th></tr>
+<tr>
+  <td><b>抽取式</b><br><span class="pill live">紫 #534AB7</span></td>
+  <td><b>交给看不见的力量</b><br>你放弃控制权，翻牌或刮开</td>
+  <td>翻牌 · 刮开 · 摇签</td>
+  <td>一张小牌，点一下翻面（写着「节制」）</td>
+  <td><span class="pill live">塔罗牌</span><span class="pill live">刮刮乐</span><span class="pill gray">盲盒</span><span class="pill gray">抽签</span></td>
+</tr>
+<tr>
+  <td><b>调节式</b><br><span class="pill live">粉 #D4537E</span></td>
+  <td><b>说说你今天的状态</b><br>它会更懂你一点</td>
+  <td>拖滑块 · 连续值 · 实时反馈</td>
+  <td>一根滑块，拖它数字跟着变（62%）</td>
+  <td><span class="pill live">能量条</span><span class="pill gray">社交电量</span><span class="pill gray">心情</span><span class="pill gray">内心天气</span></td>
+</tr>
+<tr>
+  <td><b>选择式</b><br><span class="pill live">绿 #1D9E75</span></td>
+  <td><b>今天你想成为谁</b><br>你指定，它执行</td>
+  <td>点卡片 · 明确的主动决策</td>
+  <td>三张身份小卡，点一张会亮</td>
+  <td><span class="pill live">身份扮演</span><span class="pill gray">今日场景</span><span class="pill gray">MBTI</span></td>
+</tr>
+<tr>
+  <td><b>输入式</b><br><span class="pill live">黄 #BA7517</span></td>
+  <td><b>直接告诉它</b><br>打一句话，它自己匹配</td>
+  <td>打字 · 实时匹配</td>
+  <td>一个打字机效果，一句话自己打出来</td>
+  <td><span class="pill live">一句话日记</span><span class="pill gray">水晶能量</span></td>
+</tr>
+<tr>
+  <td><b>＋ 再加一个</b><br><span class="pill gray">灰 · 虚线</span></td>
+  <td colspan="4"><b>不是占位，是「结构可插拔」的证明。</b>点进去告诉你：加一个板块只需要 <b>①一个交互范式 ②一组受控词表 ③一个约束生成器</b>。所以下一个板块不用改架构，挂上去就行。</td>
+</tr>
+</table>
+
+<div class="callout warn">
+<b>为什么不把四页全做成塔罗翻卡？</b><br>
+如果四个板块都翻牌，就等于自己推翻了「我们不全是抽卡」这句话，评委会问「那你这四个有什么区别」。<br>
+所以改成<b>各留各的体感</b>：翻牌 / 拖条 / 选卡 / 打字——每种交互点一下就知道不一样，这本身就是差异化证据。
+</div>
+
+<h2><span class="num">5</span>五个页面里到底装了什么（数据层）</h2>
+<p class="sub">队友改文案、加内容，只需要动这五张表。下面是每张表的字段和作用。</p>
+
+<h3>① 挂衣杆上的板块 · BOARDS</h3>
+<p>首屏那根杆上的东西。每件衣服是一个 SVG，点它进对应板块。共 5 个槽位（4 板块 + 1 空位）。</p>
+<table>
+<tr><th>字段</th><th>含义</th></tr>
+<tr><td><code>k</code> / <code>t</code> / <code>s</code></td><td>板块名 / 一句话标题 / 补充说明</td></tr>
+<tr><td><code>how</code></td><td>交互范式标签（翻牌·刮开·摇签…）</td></tr>
+<tr><td><code>c/b/fg/line/dk</code></td><td>该板块的专用色（底/边/字/线/深字），四板块各一套</td></tr>
+<tr><td><code>shape</code></td><td>挂在杆上的衣服图形：抽绳袋 / 腰带 / 外套 / 吊牌 / 虚线框</td></tr>
+<tr><td><code>items</code></td><td>该板块下的入口卡（名称 + 说明 + 能不能点 + 跳到哪）</td></tr>
+</table>
+
+<h3>② 天气 · CITIES（全 App 唯一的「自动注入」）</h3>
+<p>天气<b>不进任何板块</b>，它挂在首屏顶部当一个芯片，平时零操作。点一下才展开城市弹层。</p>
+<table>
+<tr><th>城市</th><th>天气</th><th>它只决定一件事</th></tr>
+<tr><td>西安（默认）</td><td>18℃ 阴</td><td>薄外套</td></tr>
+<tr><td>北京</td><td>9℃ 晴</td><td>加一件</td></tr>
+<tr><td>上海</td><td>21℃ 多云</td><td>单层就够</td></tr>
+<tr><td>成都</td><td>16℃ 小雨</td><td>带伞 + 薄外套</td></tr>
+<tr><td>广州</td><td>29℃ 闷热</td><td>越薄越好</td></tr>
+<tr><td>哈尔滨</td><td>2℃ 风大</td><td>羽绒</td></tr>
+</table>
+<div class="callout">
+<b>换城市的规则（重要，别改）：</b>换城市<b>只改「厚薄」这一档</b>，不动风格、不动颜色。<br>
+理由是天气不该抢走用户的决定权——它只是个兜底背景。<br>
+弹层顶部还有一个「用当前位置」，点它就是自动读取、完全不用管它。
+</div>
+
+<h3>③ 输入式的关键词表 · KW（这是打桩的地方）</h3>
+<p>用户打一句话，程序在这张表里找关键词，找到了就吐出对应标签和方向。目前 <b>8 组</b>：</p>
+<table>
+<tr><th>输入里出现这些词</th><th>读成</th><th>它会怎么说</th><th>给出的方向</th></tr>
+<tr><td>累 / 困 / 乏 / 没劲 / 疲惫 / 熬夜 / 不想动</td><td><b>电量 · 低</b></td><td>低电量，穿松一点、颜色少一点</td><td>米白衬衫 · 直筒牛仔 · 帆布鞋</td></tr>
+<tr><td>面试 / 实习 / 答辩 / 宣讲 / 汇报 / 正式</td><td><b>场景 · 正式</b></td><td>正式场合，先把锐角收掉</td><td>燕麦西装 · 白 T · 直筒西裤</td></tr>
+<tr><td>约会 / 见面 / 喜欢 / 暧昧 / 相亲</td><td><b>场景 · 约会</b></td><td>柔色系，别用力过猛</td><td>藕粉针织 · 半裙 · 小手包</td></tr>
+<tr><td>拍照 / 拍片 / 出片 / 扫街 / 看展 / 展</td><td><b>场景 · 出片</b></td><td>要有轮廓，镜头里才立得住</td><td>文艺叠穿 · 长裙 · 帆布鞋</td></tr>
+<tr><td>图书馆 / 上课 / 自习 / 教室 / 坐一天</td><td><b>场景 · 久坐</b></td><td>久坐要松，室内外温差要一层</td><td>宽松针织 · 直筒裤 · 薄外套</td></tr>
+<tr><td>热 / 夏天 / 晒 / 闷</td><td><b>天气 · 热</b></td><td>先降温，颜色可以亮一点</td><td>棉麻衬衫 · 短裤 · 凉鞋</td></tr>
+<tr><td>冷 / 降温 / 风大 / 秋 / 冬</td><td><b>天气 · 冷</b></td><td>先保厚，再谈风格</td><td>驼色大衣 · 高领 · 短靴</td></tr>
+<tr><td>开心 / 兴奋 / 想美 / 漂亮 / 高兴</td><td><b>情绪 · 上扬</b></td><td>今天可以明艳一次</td><td>正红半裙 · 白衬衫 · 玛丽珍</td></tr>
+</table>
+<p><b>输入后输出两块：</b>「从这句话里读到」= 命中的标签组；「匹配到的方向」= 结果卡（第一条高亮，第二条可以跳去身份扮演，第三条永远留「不想选，就抽一张」）。<br>
+<b>没命中怎么办：</b>不硬猜。老实说「没读到明确的场合或状态」，然后给一个出口——交给塔罗牌。</p>
+
+<h3>④ 广场动态流 · FEED</h3>
+<p>目前 <b>5 条</b>假数据，每条含：用户昵称 + 头像色 + 时间 + 来源徽章（塔罗·世界 / 能量条 34% / 身份扮演·学姐 / 刮刮乐 / 一句话日记）+ 三张色块拼贴 + 一句正文 + 点赞数 + 评论数 + 分类标签。</p>
+<table>
+<tr><th>筛选</th><th>逻辑</th><th>结果</th></tr>
+<tr><td>推荐</td><td>全部</td><td>5 条</td></tr>
+<tr><td>抽卡墙</td><td>标签 = 抽卡墙</td><td>2 条</td></tr>
+<tr><td>同款</td><td>标签 = 同款 或 推荐</td><td>3 条</td></tr>
+</table>
+<p class="sub">广场顶部那条黄色按钮写的是「<b>＋ 去拿个主意，然后发出来</b>」——不是「去搭配一套」。全站文案都刻意避开了「搭配」这个词。</p>
+
+<h3>⑤ 内容池 · WARDROBE / TAROT / IDENTITIES / ENERGY_STATES</h3>
+<table>
+<tr><th>表</th><th>条数</th><th>内容</th></tr>
+<tr><td><b>WARDROBE</b> 单品库</td><td>10 件</td><td>每件：名称 / 品类 / 主色值 / 文字色 / 风格。<br>例：奶油白针织开衫（上装·甜美）、燕麦色西装外套（外套·通勤）、焦糖色乐福鞋（鞋·复古）</td></tr>
+<tr><td><b>TAROT</b> 塔罗牌义</td><td>6 张</td><td>星星 / 恋人 / 隐士 / 太阳 / 死神 / 月亮。<br>每张：罗马数字 + 关键词 + 风格 + 推荐色 + 避雷色 + 一句解读</td></tr>
+<tr><td><b>IDENTITIES</b> 人设</td><td>4 个</td><td>女主角 / 学姐 / 反派 / 隐形人。<br>每个：一个符号 + 一句话 + 风格 + 色系 + 避雷色</td></tr>
+<tr><td><b>ENERGY_STATES</b> 电量文案</td><td>5 档</td><td>0–20 / 20–45 / 45–70 / 70–90 / 90–100，每档一句状态描述</td></tr>
+</table>
+<p class="sub">注：塔罗牌是 <b>6 张</b>，最终要做满 <b>22 张大阿尔卡纳</b>。这是内容量最大的一块，也是最该优先补的。</p>
+
+<h2><span class="num">6</span>一条搭配是怎么出来的</h2>
+<p>四个入口看起来完全不同，但走到底都是同一套动作。</p>
+<table>
+<tr><th>步骤</th><th>发生了什么</th><th>举例</th></tr>
+<tr><td>1 · 收集意图</td><td>入口用它的方式问出用户状态</td><td>抽到「星星」/ 电量 34% / 选了「学姐」/ 打了「今天好累」</td></tr>
+<tr><td>2 · 生成约束</td><td>翻译成三个条件：<b>风格 · 主色 · 避雷色</b>，并写一句摘要</td><td>风格 文艺 · 色系 浅蓝/米白 · 避雷 纯黑</td></tr>
+<tr><td>3 · 筛单品</td><td>按「风格命中 +4 分、颜色命中 +2 分、避雷色 -9 分」排序</td><td>从 10 件里挑出分最高的</td></tr>
+<tr><td>4 · 补齐一套</td><td>按品类占位：上装 + 下装 + 鞋 + 配饰（若最高分是连衣裙，就换成 连衣裙 + 鞋 + 外套 + 配饰）</td><td>固定出 4 件</td></tr>
+<tr><td>5 · 出结果</td><td>结果页显示：约束摘要 + 四件拼贴 + 来源徽章 +「来自「塔罗·星星」的解读」</td><td>—</td></tr>
+</table>
+<p><b>「换一套」怎么工作：</b>把当前这套里随机一件记进「排除名单」，再重算一次，保证换出来的不一样。<b>换板块</b>则回到首屏。</p>
+<div class="callout good">
+<b>给队友的一句话：</b>入口是四个，引擎只有一个。同学 A 只要把这套规则写一遍，后面接几个入口都不用重写。
+</div>
+
+<h2><span class="num">7</span>全站共用的受控词表</h2>
+<p class="sub">所有入口必须用同一套词汇，不许各写各的——否则同一个颜色在不同地方写两个名字，筛选会出错。</p>
+<div class="tagrow">
+<b class="k">8 种风格</b>
+<b>简约</b><b>通勤</b><b>文艺</b><b>甜美</b><b>运动</b><b>复古</b><b>明艳</b><b>慵懒</b>
+</div>
+<div class="tagrow">
+<b class="k">24 个色（策划口径）</b>
+<b>奶油白</b><b>米白</b><b>纯白</b><b>燕麦</b><b>焦糖</b><b>浅蓝</b><b>牛仔蓝</b><b>雾紫</b><b>藕粉</b><b>玫粉</b><b>正红</b><b>酒红</b><b>亮黄</b><b>炭灰</b><b>纯黑</b><b>银灰</b><b>…</b>
+</div>
+<div class="tagrow">
+<b class="k">7 个品类</b>
+<b>上装</b><b>下装</b><b>外套</b><b>连衣裙</b><b>鞋</b><b>配饰</b><b>包</b>
+</div>
+<div class="callout warn">
+<b>口径对齐提醒：</b>「8 风格 / 24 色 / 7 品类」是策划案里定的目标口径。<b>目前 demo 实际用到的是：8 种风格（都在用）、6 个品类（包还没做）、约 16 个具体色值。</b><br>
+补内容时按目标口径补齐，但写代码的同学要知道现在实装到哪一步。
+</div>
+
+<h2><span class="num">8</span>坦白交底：哪些是真的，哪些是装的</h2>
+<table>
+<tr><th>类型</th><th>有哪些</th><th>演示时怎么说</th></tr>
+<tr><td><span class="pill live">真的能跑</span></td><td>11 个页面的全部跳转、抽屉开合与高亮、挂衣杆拖拽与吸附、塔罗翻牌、刮刮乐手刮、能量条拖拽、身份卡选择、命令栏实时匹配、广场筛选与点赞、结果页出搭配与换一套</td><td>直接点，随便点，都通</td></tr>
+<tr><td><span class="pill stub">打桩</span></td><td>命令栏的「读懂你」（实为 8 组关键词对照表）；所有文案（牌义、解读、动态）都是预置的</td><td>照实说：<b>这里用关键词表打桩，证明交互成立；真实版接模型后是语义理解</b></td></tr>
+<tr><td><span class="pill gray">没做</span></td><td>拍照上传 + AI 识图打标；真实天气 API；登录 / 多用户 / 云端；10 个灰色入口卡</td><td>说它是<b>路线图</b>，不是没想过——结构上已经留好位置了（扩展位那页就是证据）</td></tr>
+</table>
+
+<h2><span class="num">9</span>还需要产出的内容（分工参考）</h2>
+<table>
+<tr><th>要产出</th><th>内容</th><th>建议谁做</th></tr>
+<tr><td><b>塔罗牌义扩展</b></td><td>从 6 张补到 22 张大阿尔卡纳，每张：牌名 / 关键词 / 风格 / 推荐色 / 避雷色 / 一句解读。格式给 JSON</td><td>内容同学（文科）</td></tr>
+<tr><td><b>单品库扩充</b></td><td>从 10 件补到 12–15 件，白底图 + 打标（品类 / 主色 / 风格 / 季节）</td><td>视觉同学</td></tr>
+<tr><td><b>灰色入口的内容表</b></td><td>盲盒 / 抽签 / 社交电量 / 心情 / 内心天气 / 今日场景 / MBTI / 水晶能量</td><td>内容同学</td></tr>
+<tr><td>视觉统一</td><td>四个板块的配色已经定好，别再加第五种色调</td><td>视觉同学</td></tr>
+<tr><td>演示讲稿</td><td>重点：30 秒讲清「决策入口」；输入式那块必须说明是打桩</td><td>组长</td></tr>
+</table>
+
+<h2><span class="num">10</span>还没最终拍板的两件事</h2>
+<ul>
+<li><b>抽屉三个名称是否就这样定</b>（拿主意 / 我的衣柜 / 广场）。</li>
+<li><b>入口墙上的灰色卡片是否收掉</b>。现在的处理是保留——因为它能说明「板块还能往上挂入口」，比空着更有说服力。</li>
+</ul>
+
+<div class="foot">
+电子衣柜 · 界面原型 Demo 说明文档<br>
+对应文件：<b>demo_界面原型.html</b>（单文件，双击即可打开，无需联网）<br>
+文档口径以实际代码为准，如有出入以代码为准。
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!-- AI生成 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>电子衣柜 × 玄学搭配</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- 「拿主意」这一层：抽屉 → 挂衣杆四板块 → 入口 → 统一约束 -->
+  <link rel="stylesheet" href="oracle.css" />
+  <!-- 真机外壳层（可开关）：?mode=web 切回网页模式 -->
+  <link rel="stylesheet" href="shell.css" />
+</head>
+<body>
+<p data-aigc-mark="1" style="margin:0 0 8px;font-size:10px;line-height:1.3;color:#6b6560;font-weight:400;">AI生成</p>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ========== 一级 · 侧边抽屉 ========== -->
+  <div id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-scrim" data-close></div>
+    <aside class="drawer-panel">
+      <div class="drawer-head">
+        <span class="brand-mark">✦</span>
+        <div>
+          <div class="brand-name">电子衣柜</div>
+          <div class="brand-sub">× 玄学搭配</div>
+        </div>
+      </div>
+
+      <button class="drawer-hero" data-go="home">
+        <span class="dh-t">拿主意</span>
+        <span class="dh-s">抽 · 拖 · 点 · 说，选一种定今天</span>
+      </button>
+
+      <div class="drawer-line"><span>配套</span></div>
+      <button class="drawer-sub" data-go="wardrobe">我的衣柜<span>放单品的地方</span></button>
+      <button class="drawer-sub" data-go="plaza">广场<span>看别人怎么决定</span></button>
+
+      <div class="drawer-foot">
+        <div class="drawer-quote">我们不做推荐。我们只帮你把今天定下来。</div>
+        <div class="drawer-nav">
+          <span class="dn-label">导航形态</span>
+          <div class="dn-seg">
+            <button type="button" data-navmode="drawer">纯抽屉</button>
+            <button type="button" data-navmode="hybrid">抽屉 + 底栏</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 灰卡点开的小卡片 / 底部 Tab（B 版） -->
+  <div id="stub-sheet" class="stub-sheet"></div>
+  <div id="otabbar" class="otabbar"></div>
+
+  <header class="topbar">
+    <button class="menu-btn" id="btn-menu" aria-label="打开菜单"><span></span><span></span><span></span></button>
+    <div class="brand">
+      <span class="brand-mark">✦</span>
+      <div>
+        <div class="brand-name">电子衣柜</div>
+        <div class="brand-sub">× 玄学搭配</div>
+      </div>
+    </div>
+    <!-- 老导航仍在（手机外壳会读它），但主流程已经走抽屉 -->
+    <nav class="nav" hidden>
+      <button class="nav-btn" data-view="home">拿主意</button>
+      <button class="nav-btn" data-view="wardrobe">衣柜</button>
+      <button class="nav-btn" data-view="plaza">广场</button>
+      <button class="nav-btn" data-view="result">结果</button>
+      <button class="nav-btn" data-view="style">风格</button>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <!-- ========== 衣橱 ========== -->
+    <section id="wardrobe" class="view active">
+      <div class="section-head">
+        <h1>衣橱</h1>
+        <p class="muted">上传一张衣服照片，自动抠成白底单品并打上标签。完整链路需本地服务：<code>python server/app.py</code> → 打开 <code>http://127.0.0.1:8787</code></p>
+      </div>
+      <div id="service-status" class="service-status"></div>
+
+      <!-- 录入单品：规范 + 上传 -->
+      <div class="intake">
+        <aside class="rules-card">
+          <div class="rules-head">
+            <span class="rules-badge">拍摄规范</span>
+            <h2>录入前请确认</h2>
+          </div>
+          <ul class="rules-list">
+            <li class="ok"><strong>一次一件</strong>，画面只出现一件单品</li>
+            <li class="ok"><strong>完整入镜</strong>，袖口 / 下摆 / 鞋头不被裁切</li>
+            <li class="ok"><strong>无遮挡</strong>，手、身体、衣架、杂物不要挡住主体</li>
+            <li class="ok"><strong>平铺或悬挂</strong>，尽量不穿上身（避免褶皱误判）</li>
+            <li class="ok"><strong>背景干净</strong>，纯色床单 / 白墙更佳，利于抠底</li>
+            <li class="ok"><strong>光线均匀</strong>，避免强阴影与过曝</li>
+            <li class="ok"><strong>主体居中</strong>，约占画面 60–80%</li>
+            <li class="ok">JPG / PNG / WebP · 短边 ≥ 480px · ≤ 10MB</li>
+          </ul>
+          <div class="rules-dont">
+            <span class="dont-tag">不要</span>
+            多件叠放 · 模特上身特写 · 手持遮挡 · 低糊截图 · 多图拼接
+          </div>
+          <label class="rules-check">
+            <input type="checkbox" id="rules-ack" />
+            <span>我已按以上规范拍摄 / 选图</span>
+          </label>
+        </aside>
+
+        <div class="intake-main">
+          <!-- 入库方式：本地抠底 / 联网找白底图，两条路互补 -->
+          <div class="mode-row">
+            <span class="mode-label">入柜方式</span>
+            <div class="seg" id="ingest-mode" role="group" aria-label="入柜方式">
+              <button type="button" class="seg-btn active" data-mode="cut">AI 抠图</button>
+              <button type="button" class="seg-btn" data-mode="web">联网找白底图</button>
+              <button type="button" class="seg-btn" data-mode="auto">自动</button>
+            </div>
+          </div>
+          <p class="mode-hint" id="mode-hint">
+            用本地算法把你这张照片的背景去掉（离线可用，永远能跑通）。
+          </p>
+
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="上传或拖入衣服照片">
+            <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+            <input id="camera-input" type="file" accept="image/*" capture="environment" hidden />
+            <div class="dropzone-icon">📷</div>
+            <div class="dropzone-title">拖入照片，或点击选择</div>
+            <div class="dropzone-hint">请按左侧规范：单件 · 无遮挡 · 完整入镜</div>
+            <div class="dropzone-actions">
+              <button type="button" class="btn primary" id="btn-pick">选择图片</button>
+              <button type="button" class="btn ghost" id="btn-camera">拍照</button>
+            </div>
+          </div>
+
+          <div id="preview-panel" class="preview-panel hidden">
+            <div class="preview-title">确认后再入柜</div>
+            <div class="preview-body">
+              <img id="preview-img" alt="待入柜预览" />
+              <div class="preview-meta">
+                <div id="preview-name" class="preview-name"></div>
+                <div id="preview-checks" class="preview-checks"></div>
+                <div class="preview-actions">
+                  <button type="button" class="btn primary" id="btn-confirm">确认入柜</button>
+                  <button type="button" class="btn ghost" id="btn-cancel">重新选择</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="upload-status" class="status-panel hidden">
+            <div class="status-title">处理中…</div>
+            <div class="status-steps">
+              <span data-step="cut">抠底</span>
+              <span data-step="tag">打标</span>
+              <span data-step="done">入柜</span>
+            </div>
+            <div class="status-msg"></div>
+          </div>
+
+          <!-- AI 在算的时候必须有东西在动：会转的圈 + 走了多少秒 + 现在在干嘛。
+               放在状态面板外面，这样「检查图片」这种还没进状态面板的阶段也能用。 -->
+          <div id="upload-busy" class="busy-host"></div>
+
+          <div id="upload-error" class="upload-error hidden"></div>
+        </div>
+      </div>
+
+      <!-- 联网搜到的白底图候选：交给人确认，不替用户拍板 -->
+      <div id="found-modal" class="found-modal hidden">
+        <div class="found-card">
+          <div class="found-head">
+            <div class="found-title">联网找到这些白底图</div>
+            <div class="found-sub" id="found-sub"></div>
+          </div>
+          <div id="found-grid" class="found-grid"></div>
+          <div class="found-actions">
+            <button type="button" class="btn ghost" id="btn-found-mine">用我自己那张的抠图</button>
+            <button type="button" class="btn ghost" id="btn-found-cancel">取消</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 没有素材？内置示例衣物图，点一下就走完「抠底→打标→入柜」 -->
+      <div class="sample-box">
+        <div class="sample-head">
+          <h2>没有照片？用内置示例图跑通流程</h2>
+          <span class="muted">示例素材为网络公开商品图 · 点击即入柜（走和上传完全相同的链路）</span>
+        </div>
+        <div id="sample-row" class="sample-row"></div>
+      </div>
+
+      <div id="manual-panel" class="manual-panel hidden">
+        <div class="manual-title">手动补标（VLM 不可用时）</div>
+        <div class="manual-grid">
+          <label>品类
+            <select id="m-category">
+              <option value="top">上衣</option>
+              <option value="bottom">下装</option>
+              <option value="outer">外套</option>
+              <option value="shoes">鞋</option>
+              <option value="bag">包</option>
+            </select>
+          </label>
+          <label>类型
+            <select id="m-type">
+              <option>短袖</option><option>长袖</option><option>短裤</option>
+              <option>长裤</option><option>外套</option><option>鞋</option>
+              <option>包</option><option>其他</option>
+            </select>
+          </label>
+          <label>色名
+            <input id="m-color-name" type="text" placeholder="如 奶油白" />
+          </label>
+          <label>版型
+            <select id="m-fit">
+              <option>宽松</option><option>合身</option><option>紧身</option>
+              <option>直筒</option><option>阔腿</option><option>其他</option>
+            </select>
+          </label>
+          <label>材质
+            <select id="m-material">
+              <option>棉</option><option>麻</option><option>牛仔</option><option>针织</option>
+              <option>羊毛</option><option>皮革</option><option>丝绸</option><option>雪纺</option>
+              <option>涤纶</option><option>运动面料</option><option>灯芯绒</option><option>卫衣布</option>
+              <option>其他</option>
+            </select>
+          </label>
+          <label>场合
+            <select id="m-occasion" multiple size="4">
+              <option>通勤</option><option>约会</option><option>休闲</option><option>运动</option>
+              <option>聚会</option><option>旅行</option><option>居家</option><option>正式</option>
+              <option>校园</option>
+            </select>
+          </label>
+          <label>季节
+            <select id="m-season" multiple size="4">
+              <option>春</option><option>夏</option><option>秋</option><option>冬</option>
+            </select>
+          </label>
+          <label>风格
+            <select id="m-style" multiple size="4">
+              <option>温柔</option><option>简约</option><option>通勤</option><option>街头</option>
+              <option>运动</option><option>甜美</option><option>极简</option><option>复古</option>
+            </select>
+          </label>
+        </div>
+        <button id="manual-save" class="btn primary">保存标签</button>
+      </div>
+
+      <div id="item-grid" class="item-grid"></div>
+    </section>
+
+    <!-- ========== 风格选择（三种方式） ========== -->
+    <section id="style" class="view">
+      <div class="section-head">
+        <h1>选风格</h1>
+        <p class="muted">三种表达方式任选（也可叠加），组合成一份风格约束后再生成穿搭。</p>
+      </div>
+
+      <div class="style-block">
+        <div class="style-block-head"><span class="idx">①</span><h2>标签勾选</h2><span class="muted">直接挑你想要的风格词</span></div>
+        <div id="tag-picker" class="chip-row"></div>
+      </div>
+
+      <div class="style-block">
+        <div class="style-block-head"><span class="idx">②</span><h2>滑动评分</h2><span class="muted">用三个维度表达倾向</span></div>
+        <div class="sliders">
+          <label class="slider-row">
+            <span class="sl-name">正式度</span>
+            <input type="range" id="s-formality" min="1" max="5" step="1" value="3" />
+            <span class="sl-val" id="v-formality">3（日常）</span>
+          </label>
+          <label class="slider-row">
+            <span class="sl-name">活力</span>
+            <input type="range" id="s-energy" min="0" max="100" step="5" value="50" />
+            <span class="sl-val" id="v-energy">50</span>
+          </label>
+          <label class="slider-row">
+            <span class="sl-name">明度</span>
+            <input type="range" id="s-brightness" min="0" max="100" step="5" value="55" />
+            <span class="sl-val" id="v-brightness">55</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="style-block">
+        <div class="style-block-head"><span class="idx">③</span><h2>示例图点选</h2><span class="muted">看哪套顺眼就点哪套</span></div>
+        <div id="look-picker" class="look-row"></div>
+      </div>
+
+      <div class="style-summary" id="style-summary"></div>
+      <div class="style-actions">
+        <button class="btn primary" id="btn-gen-style">按这个风格生成穿搭</button>
+        <button class="btn ghost" id="btn-style-reset">清空选择</button>
+      </div>
+    </section>
+
+    <!-- ========== 拿主意 · 首屏（挂衣杆 + 天气芯片）========== -->
+    <section id="home" class="view"></section>
+
+    <!-- ========== 板块页（动态取板块名）========== -->
+    <section id="board" class="view"></section>
+
+    <!-- ========== 抽取式 · 塔罗 ========== -->
+    <section id="tarot" class="view">
+      <!-- 内容由 web/oracle.js 的 renderTarotWheel() 动态生成（圆盘抽三张牌） -->
+    </section>
+
+    <!-- ========== 抽取式 · 刮刮乐 / 调节式 · 能量条 / 选择式 · 人设 ========== -->
+    <section id="scratch" class="view"></section>
+    <section id="energy" class="view"></section>
+    <section id="identity" class="view"></section>
+
+    <!-- ========== 输入式 · 一句话 ========== -->
+    <section id="input" class="view"></section>
+
+    <!-- ========== 扩展位 ========== -->
+    <section id="ext" class="view"></section>
+
+    <!-- ========== 广场 ========== -->
+    <section id="plaza" class="view"></section>
+
+    <!-- ========== 结果 ========== -->
+    <section id="result" class="view">
+      <div class="section-head">
+        <h1>今天穿这套</h1>
+        <p class="muted">规则从衣橱里选出的成套单品。</p>
+        <div class="result-source hidden" id="result-source"></div>
+      </div>
+
+      <div class="result-layout">
+        <!-- 一整张拼贴：单品按「上身/下身 在左，外搭/鞋 在右」摆开，
+             不再画四个虚线格子 —— 空的那格不出现，原因写进下面的说明行 -->
+        <div class="collage" id="collage">
+          <div class="look-chips" id="look-chips"></div>
+          <div class="look-board">
+            <span class="deco d1">✦</span>
+            <span class="deco d2">✦</span>
+            <span class="deco d3">✧</span>
+            <div class="slot slot-top" data-slot="top">
+              <span class="slot-label">上衣</span>
+              <img class="slot-img hidden" alt="上衣" />
+              <div class="slot-empty">待选</div>
+              <div class="slot-sample hidden"></div>
+              <div class="slot-note hidden"></div>
+            </div>
+            <div class="slot slot-bottom" data-slot="bottom">
+              <span class="slot-label">下装</span>
+              <img class="slot-img hidden" alt="下装" />
+              <div class="slot-empty">待选</div>
+              <div class="slot-sample hidden"></div>
+              <div class="slot-note hidden"></div>
+            </div>
+            <div class="slot slot-outer" data-slot="outer">
+              <span class="slot-label">外套</span>
+              <img class="slot-img hidden" alt="外套" />
+              <div class="slot-empty">待选</div>
+              <div class="slot-sample hidden"></div>
+              <div class="slot-note hidden"></div>
+            </div>
+            <div class="slot slot-shoes" data-slot="shoes">
+              <span class="slot-label">鞋</span>
+              <img class="slot-img hidden" alt="鞋" />
+              <div class="slot-empty">待选</div>
+              <div class="slot-sample hidden"></div>
+              <div class="slot-note hidden"></div>
+            </div>
+            <div class="look-sign">Today's<br /><em>Look</em> <span>♡</span></div>
+          </div>
+          <div class="look-note" id="look-note"></div>
+        </div>
+
+        <aside class="story-panel">
+          <div class="story-card-art">
+            <img id="result-tarot-img" alt="塔罗牌面" class="hidden" />
+            <div class="story-card-placeholder">尚未抽牌</div>
+          </div>
+          <div id="result-busy" class="busy-host"></div>
+          <div class="story-text" id="result-story">抽一张牌，开始今天的仪式。</div>
+          <div class="reason-text" id="result-reason">理由将在这里出现。</div>
+          <div class="result-meta" id="result-meta"></div>
+          <div class="match-summary hidden" id="match-summary"></div>
+          <div class="result-actions">
+            <button class="btn primary" id="btn-run">生成今日穿搭</button>
+            <button class="btn ghost" id="btn-reroll">换一套</button>
+            <button class="btn ghost" id="btn-back-entry">换个板块</button>
+          </div>
+        </aside>
+      </div>
+
+      <!-- 今天更适合：根据 oracle 入口 + 用户指定的风格/色，给具体搭配方向
+           不写"缺 X 色",而是把"今天的运势想要的方向"翻译得更具体。 -->
+      <div class="oracle-advice hidden" id="oracle-advice"></div>
+
+      <!-- 匹配度 + 每件单品的搭配逻辑 -->
+      <div class="match-panel" id="match-panel"></div>
+      <div class="logic-panel" id="logic-panel"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>规则负责选款 · AI 只打标 + 写文案 · 断网主线可跑</span>
+  </footer>
+
+  <!-- 全部用经典脚本（不是 ES module）。
+       原因：Chrome/Edge 在 file:// 下禁止加载 <script type="module">（CORS，origin 为 null），
+       双击 index.html 时 app.js 不会执行 —— 页面能看、点了没反应。
+       经典脚本没有这个限制，双击打开和起本地服务（python server/app.py）都能完整交互。
+       顺序即依赖：safe-storage 安全存储 → vocab 词表 → oracle-data 板块数据 → busy 等待指示
+                  → engine 引擎 → oracle 拿主意 → offline.js 离线数据 → app 主程序
+                  → shell 手机外壳（最后，装外壳） -->
+  <script src="safe-storage.js" defer></script>
+  <script src="vocab.js" defer></script>
+  <script src="oracle-data.js" defer></script>
+  <script src="busy.js" defer></script>
+  <script src="engine.js" defer></script>
+  <script src="oracle.js" defer></script>
+  <!-- 离线数据快照（自动生成）：file:// 下浏览器不许 fetch，data/*.json 读不到，
+       这份 <script> 里的副本让双击打开也有完整衣橱 / 塔罗。起服务时优先走接口。 -->
+  <script src="data/offline.js" defer></script>
+  <script src="app.js" defer></script>
+  <script src="shell.js" defer></script>
+</body>
+</html>

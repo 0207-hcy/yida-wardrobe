@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>易搭｜今天，穿得像自己</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%236c5ce7'/%3E%3Ctext x='50' y='72' font-size='64' text-anchor='middle' fill='white'%3E%E7%A9%BF%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/theme-tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/motion.css">
+<link rel="stylesheet" href="css/reference-v3.css">
+<link rel="stylesheet" href="css/visual-v5.css">
+<link rel="stylesheet" href="css/visual-v8.css?v=20261121f">
+<!-- V10 玩法模块样式 -->
+<link rel="stylesheet" href="css/v10/aw-core.css">
+<link rel="stylesheet" href="css/v10/aw-tarot.css">
+
+
+
+
+
+<link rel="stylesheet" href="css/v10/aw-play-visual.css">
+<link rel="stylesheet" href="css/v10/aw-game-background.css">
+<!-- 真机流畅度优化（仅 ≤460px/手机横屏生效，桌面样机不受影响）；放最后以便覆盖基础规则 -->
+<link rel="stylesheet" href="css/mobile-perf.css">
+<style>/* 确保深色主题下所有文字为浅色 */:root[data-theme="space"] #stage{--text:#f4eee6;--muted:#b7aeaa;color:#f4eee6}:root[data-theme="flow"] #stage{--text:#302A3D;--muted:#756E80;color:#302A3D}</style>
+<link rel="stylesheet" href="css/v11/product.css">
+<link rel="stylesheet" href="css/v11/v8-skin.css">
+<link rel="stylesheet" href="css/v11/gameplay.css">
+<link rel="stylesheet" href="css/plaza.css">
+</head>
+<body>
+<div class="demo-shell">
+  <main class="phone" id="phone">
+    <div class="theme-motion-layer" id="themeMotionLayer" aria-hidden="true"><div class="light-mystic-motion"><div class="light-starfield"></div><span class="light-dust d1"></span><span class="light-dust d2"></span><span class="light-dust d3"></span><span class="light-fourstar">✦</span><span class="light-fourstar f2">✦</span></div><div class="dark-mystic-motion"><div class="dark-starfield-far"></div><div class="dark-starfield-near"></div><span class="dark-glow g1"></span><span class="dark-glow g2"></span><span class="dark-meteor"></span></div></div><div class="theme-atmosphere" id="themeAtmosphere" aria-hidden="true"><div class="atmosphere-flow"><div class="atmosphere-scene"></div><div class="atmosphere-haze"></div></div><div class="atmosphere-space"><div class="atmosphere-scene"></div><div class="atmosphere-haze"></div></div></div><div class="app-content-layer" id="appContentLayer">
+    <div class="chrome">
+      <div class="status"><span>9:41</span><div class="status-icons"><span class="signal"><i></i><i></i><i></i><i></i></span><span>⌁</span><span class="battery"></span></div></div>
+      <div class="navbar"><button class="backbtn" id="backBtn">‹</button><div class="navtitle" id="navTitle"></div><button class="iconbtn" id="navRight">⋯</button></div>
+    </div>
+    <div class="stage" id="stage"></div>
+    <nav class="tabbar" id="tabbar">
+      <button data-root="wardrobe"><svg class="tabico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M10 6.8c0-1.7 1-2.7 2-2.7s2 1 2 2.7c0 1.7-2 2.2-2 3.2v1.2M12 11.2 3 18c-.7.5-.3 1.6.6 1.6h16.8c.9 0 1.3-1.1.6-1.6z"/></svg>衣橱</button>
+      <button data-root="home"><svg class="tabico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.4"/><path d="M12 5.6 13.7 10l4.5 1.9-4.5 1.8L12 18.2l-1.8-4.5-4.4-1.8 4.4-1.9Z"/></svg>拿主意</button>
+      <button data-root="plaza"><svg class="tabico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8.5" cy="9" r="2.8"/><circle cx="16.5" cy="9.8" r="2.2"/><path d="M2.5 19c0-3 2.7-4.8 6-4.8s6 1.8 6 4.8"/><path d="M15 14.6c3.3-.2 6.5 1.4 6.5 4.4"/></svg>广场</button>
+      <button data-root="me"><svg class="tabico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>我的</button>
+    </nav>
+    <div class="toast" id="toast"></div></div><div class="interaction-effect-layer" id="interactionEffectLayer" aria-hidden="true"></div></main>
+</div>
+<script src="data/vocab.js"></script>
+<script src="data/v11/system-catalog.js"></script>
+<script src="js/v10/aw-core.js"></script>
+<script src="js/v10/aw-data.js"></script>
+<script src="js/v10/aw-front-manifest.js"></script>
+<script src="js/v10/aw-tarot.js?v=20261027b"></script>
+<script src="data/v11/tarot-rules.js"></script>
+<script src="data/v11/gameplay-data.js"></script>
+<script src="js/v11/engine.js"></script>
+<script src="js/v11/plaza.js"></script>
+<script src="js/v11/product.js?v=20261121f"></script>
+</body></html>

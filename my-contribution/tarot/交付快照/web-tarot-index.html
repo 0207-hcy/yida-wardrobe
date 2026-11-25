@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<!-- 塔罗子系统 · 版本记录
+     V1.0  2026-09-25  首次提交：竖弧牌轮抽牌页 + 折扇解读页；逆位概率 50%
+     V1.1  2026-09-26  逆位概率由 50% 下调至 38%（产品调优：让逆位回到「少数派提醒」）；其余逻辑、界面、文案完全不变
+     对应规格文档：docs/content/塔罗牌玩法规格-V1.md
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>塔罗 · 独立子系统</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:#EFEEF6;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  display:flex;align-items:center;justify-content:center;color:#26215C;overflow:hidden}
+.frame{position:relative;width:390px;height:820px;background:#fff;border-radius:34px;
+  border:1px solid #E3E1EF;box-shadow:0 16px 48px rgba(38,33,92,.14);overflow:hidden;
+  flex:none;transform-origin:center center}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.screen.on{display:flex}
+.screen.slide-r{animation:slideR .3s ease both}
+.screen.slide-l{animation:slideL .3s ease both}
+@keyframes slideR{from{opacity:.4;transform:translateX(34px)}to{opacity:1;transform:none}}
+@keyframes slideL{from{opacity:.4;transform:translateX(-34px)}to{opacity:1;transform:none}}
+.pad{padding:26px 22px 34px}
+
+h1{font-size:21px;font-weight:600;margin:0;letter-spacing:.4px}
+.sub{font-size:13px;color:#7C77A3;margin:7px 0 0;line-height:1.6}
+
+/* ===== 抽牌页 ===== */
+.prog{font-size:12px;color:#9A95BE;margin:16px 0 0;letter-spacing:.5px}
+.prog b{color:#534AB7;font-size:14px}
+.wheel{position:relative;height:520px;margin:4px 0 0;touch-action:none;overflow:hidden;cursor:grab}
+.wheel::before{content:"";position:absolute;left:50%;top:50%;width:330px;height:330px;margin:-165px 0 0 -165px;
+  border-radius:50%;background:radial-gradient(circle,rgba(83,74,183,.10),rgba(83,74,183,0) 68%);pointer-events:none}
+.wheel.drag{cursor:grabbing}
+.card{position:absolute;left:0;top:0;width:170px;height:120px;border-radius:13px;
+  background:linear-gradient(180deg,#4A4196,#2C2566);border:1px solid #5B52B8;
+  display:flex;flex-direction:row;align-items:flex-start;justify-content:flex-start;gap:10px;
+  padding:12px 0 0 17px;will-change:transform;box-shadow:0 4px 14px rgba(20,17,48,.3)}
+.card i{font-style:normal;font-size:16px;color:#C6C1EB;line-height:1}
+.card b{font-size:15px;font-weight:700;color:#B9B3E4;letter-spacing:.5px;line-height:1}
+.wheel.anim .card{transition:transform .38s cubic-bezier(.34,1.4,.5,1)}
+.card.pick{outline:2.5px solid #FFC861;outline-offset:2px;box-shadow:0 0 26px rgba(255,180,60,.55);z-index:30}
+.card.pick i{color:#FFD98A}
+.card.taken{opacity:.1}
+.mid{position:absolute;left:0;top:0;pointer-events:none;z-index:40}
+.mid .dot{position:absolute;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#FFC861;
+  box-shadow:0 0 12px rgba(255,200,97,.95)}
+.hint{font-size:12px;color:#9A95BE;text-align:center;margin:14px 0 0;line-height:1.6}
+
+/* ===== 解读页 ===== */
+.slot{margin:18px 0 0;border:1px dashed #C9C6E2;background:#F7F6FC;border-radius:14px;padding:16px 14px;text-align:center}
+.slot-t{font-size:13px;font-weight:600;color:#7C77A3}
+.slot-d{font-size:12px;color:#A5A1C4;margin-top:5px}
+.fan{position:relative;height:186px;margin:22px 0 0;touch-action:none}
+.fcard{position:absolute;left:50%;top:12px;width:100px;height:156px;margin-left:-50px;border-radius:12px;
+  background:linear-gradient(180deg,#4A4196,#2C2566);border:1px solid #5B52B8;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 8px 22px rgba(20,17,48,.3);transform-origin:50% 130%;
+  transition:transform .34s cubic-bezier(.34,1.3,.5,1),opacity .3s;cursor:pointer}
+.fcard .no{font-size:26px;font-weight:600;color:#FFD98A;letter-spacing:1px}
+.fcard .nm{font-size:14px;color:#E7E4FA;letter-spacing:2px}
+.fcard .rv{position:absolute;right:8px;top:8px;font-size:10px;color:#FFD98A;border:1px solid rgba(255,217,138,.6);
+  border-radius:4px;padding:1px 4px;line-height:1.3}
+.faninfo{text-align:center;margin:6px 0 0;min-height:52px}
+.faninfo .pos{font-size:12px;color:#9A95BE;letter-spacing:.5px}
+.faninfo .line{font-size:15px;font-weight:600;margin-top:5px}
+.faninfo .kw{font-size:12px;color:#7C77A3;margin-top:6px}
+.para{margin:18px 0 0;background:#F5F4FC;border-radius:14px;padding:18px 17px;font-size:14.5px;
+  line-height:1.95;color:#332E63;letter-spacing:.2px}
+.para .cap{display:block;font-size:12px;color:#9A95BE;margin-bottom:9px;letter-spacing:1px}
+.again{display:block;width:100%;margin:22px 0 0;padding:14px;border-radius:14px;border:1px solid #CFCBEC;
+  background:#fff;color:#534AB7;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.again:active{background:#F3F1FC}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="screen on pad" id="s-draw">
+    <h1 id="dTitle">抽第 1 张牌</h1>
+    <p class="sub">上下滑转动牌轮，点中间亮起来的那张抽走。</p>
+    <div class="prog">已抽 <b id="dNum">0</b> / 3 张</div>
+    <div class="wheel" id="wheel"><div class="mid" id="mid"><span class="dot"></span></div></div>
+    <p class="hint">牌轮里 22 张大阿卡纳 · 抽满三张直接出解读</p>
+  </div>
+
+  <div class="screen pad" id="s-read">
+    <h1>牌给你的话</h1>
+    <p class="sub">三张牌，讲一个只属于今天的故事。</p>
+    <div class="slot">
+      <div class="slot-t">今日穿搭</div>
+      <div class="slot-d">预留位 · 本期不做，先空着</div>
+    </div>
+    <div class="fan" id="fan"></div>
+    <div class="faninfo" id="faninfo"></div>
+    <div class="para" id="para"></div>
+    <button class="again" id="again">再抽一次</button>
+  </div>
+</div>
+
+<script>
+/* ---------- 牌库 22 张大阿卡纳（与 tarot_牌库.json 一致） ---------- */
+const DECK = [
+ {no:"0",cn:"愚者",en:"The Fool",kw:["出发","自由","轻装上阵"],up:"你心里那点想出发的念头，这会儿特别活。",rev:"你今天更想把这点心思先收着，慢慢想清楚再动。"},
+ {no:"I",cn:"魔术师",en:"The Magician",kw:["行动","表达","创造"],up:"你确实有把话讲清楚的底气。",rev:"其实你更想先在心里把话说完，再决定要不要开口。"},
+ {no:"II",cn:"女祭司",en:"The High Priestess",kw:["直觉","安静","分寸"],up:"有些答案，你其实早就知道了。",rev:"你今天更想安静待着，把心事先留给自己。"},
+ {no:"III",cn:"女皇",en:"The Empress",kw:["丰盛","照料","柔软"],up:"今天值得对自己好一点。",rev:"你更想先去照顾别人的感受，也别忘了留一点柔软给自己。"},
+ {no:"IV",cn:"皇帝",en:"The Emperor",kw:["秩序","掌控","结构"],up:"你想掌控节奏，那就按自己的来。",rev:"其实你更想先稳住里面，再对外拿主意。"},
+ {no:"V",cn:"教皇",en:"The Hierophant",kw:["传统","归属","稳妥"],up:"按熟悉的规矩走，稳一点没什么不好。",rev:"你现在更想在心里确认一遍，自己是不是真的认同。"},
+ {no:"VI",cn:"恋人",en:"The Lovers",kw:["关系","选择","靠近"],up:"有想靠近的人，就别绕圈子了。",rev:"你更想先把这份心意在心里掂一掂。"},
+ {no:"VII",cn:"战车",en:"The Chariot",kw:["前进","意志","速度"],up:"你很想往前冲，那就冲。",rev:"其实你更想先踩住刹车，看清方向再加速。"},
+ {no:"VIII",cn:"力量",en:"Strength",kw:["温柔","底气","驯服"],up:"你其实很稳，接得住突然砸下来的事。",rev:"你今天更想先安顿好自己的心，再去安抚别人。"},
+ {no:"IX",cn:"隐士",en:"The Hermit",kw:["独处","内省","简朴"],up:"不太想被打扰，独处就是最好的充电。",rev:"今天你更想把自己收小一点，安静地待一会儿。"},
+ {no:"X",cn:"命运之轮",en:"Wheel of Fortune",kw:["转机","循环","时机"],up:"有件事要转弯了，你拦不住，也不用拦。",rev:"你更想先等等看，让变化自己找上门。"},
+ {no:"XI",cn:"正义",en:"Justice",kw:["公平","平衡","清楚"],up:"该把话说清楚了，公道自在人心。",rev:"其实你更想先在心里把账算明白，再开口。"},
+ {no:"XII",cn:"倒吊人",en:"The Hanged Man",kw:["停顿","换位","松弛"],up:"先停一停，换个角度看会更清楚。",rev:"你今天更想先不急着下决定，让事情再放一放。"},
+ {no:"XIII",cn:"死神",en:"Death",kw:["结束","腾出","告别"],up:"有些东西该翻篇了，放手其实是腾出手。",rev:"你更想在心里先和它道个别，慢一点也没关系。"},
+ {no:"XIV",cn:"节制",en:"Temperance",kw:["调和","平衡","缓慢"],up:"慢慢来，把节奏调成自己舒服的那种。",rev:"现在你更想先往心里找平衡，再对外使劲。"},
+ {no:"XV",cn:"恶魔",en:"The Devil",kw:["欲望","坦白","挣脱"],up:"有点想放纵一下，承认它也没什么关系。",rev:"其实你更想在心里坦白，自己到底想要什么。"},
+ {no:"XVI",cn:"塔",en:"The Tower",kw:["推翻","松动","重建"],up:"有东西松了，其实它本来就不太稳。",rev:"你更想先稳稳站住，再看清要重建什么。"},
+ {no:"XVII",cn:"星星",en:"The Star",kw:["希望","疗愈","松弛"],up:"不必用力，光会自己照过来。",rev:"你今天更想在心里给自己留一盏小灯。"},
+ {no:"XVIII",cn:"月亮",en:"The Moon",kw:["朦胧","直觉","慢慢来"],up:"看不清也没关系，慢慢走就对了。",rev:"你更想先相信自己的直觉，不急着找答案。"},
+ {no:"XIX",cn:"太阳",en:"The Sun",kw:["明亮","坦荡","快乐"],up:"你本来就是亮的，不用藏。",rev:"其实你更想先自己高兴，不必等别人先看见。"},
+ {no:"XX",cn:"审判",en:"Judgement",kw:["清醒","召唤","决定"],up:"有件事该想明白了，然后就做决定。",rev:"你更想先在心里听清自己的声音。"},
+ {no:"XXI",cn:"世界",en:"The World",kw:["完成","圆满","抵达"],up:"你想说一句「我到了」，那就说吧。",rev:"你今天更想先在心里确认，这一步自己是不是真的走完了。"}
+];
+const SUMMARIES = [
+ "所以今天，先对自己温柔一点，剩下的交给时间。",
+ "所以今天，不用急着完美，走一步算一步就好。",
+ "所以今天，允许自己慢一点，你已经在路上了。",
+ "所以今天，先照顾好自己，别的都会跟上来。",
+ "所以今天，信一点直觉，也信一点自己。",
+ "所以今天，把心放宽些，会好的。",
+ "所以今天，做完想做的，剩下的明天再说。",
+ "所以今天，你说了算，这样就很好。"
+];
+const POS = ["现在的你","正在发生的变化","今天给你的提醒"];
+
+/* ---------- 参数 ---------- */
+const N = DECK.length;      // 22
+const STEP = 9;             // 每个牌位 9°（牌大幅叠住，只露一小条）
+const R = 280;              // 弧半径（越小越弯：这是整圆的一段）
+const AMAX = 59;            // 设计的可见角半幅（±59°，约整圆的 1/3）
+const K = 0.16;             // 拖动灵敏度（度/像素）
+
+/* ---------- 状态 ---------- */
+let order = [];             // 洗牌后的牌序
+let picked = [];            // [{slot, card, rev}]
+let wheelRot = 0;
+let AX = 800;               // 弧心横坐标（在屏幕右外侧）
+let AY = 260;               // 弧心纵坐标
+let dragging = false, y0 = 0, r0 = 0, moved = 0;
+
+const wheel = document.getElementById('wheel');
+const mid = document.getElementById('mid');
+const dTitle = document.getElementById('dTitle');
+const dNum = document.getElementById('dNum');
+
+function buzz(p){ if(navigator.vibrate) try{ navigator.vibrate(p); }catch(e){} }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i];a[i]=a[j];a[j]=t; } return a; }
+
+/* ---------- 进入抽牌页 ---------- */
+function initDraw(){
+  order = shuffle(DECK.map((_,i)=>i));
+  picked = [];
+  wheelRot = -11*STEP;      // 让中间那张对准指针
+  dTitle.textContent = '抽第 1 张牌';
+  dNum.textContent = '0';
+  wheel.innerHTML = '<div class="mid" id="mid"><span class="dot"></span></div>';
+  order.forEach((ci,i)=>{
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.dataset.i = i;
+    el.innerHTML = '<i>✦</i><b>'+(i+1)+'</b>';
+    wheel.appendChild(el);
+  });
+  geom(); layout();
+}
+
+/* ---------- 计算弧心：让可见弧在容器里水平居中 ---------- */
+function geom(){
+  const W = wheel.clientWidth || 346;
+  AY = (wheel.clientHeight || 520)/2;
+  const bulge = R*(1-Math.cos(AMAX*Math.PI/180));   // 可见弧的水平深度
+  AX = W/2 + R - bulge/2;
+}
+function AX_R(){ return AX - R; }
+
+/* ---------- 布局 ---------- */
+function angOf(i){ return (i*STEP + wheelRot) * Math.PI/180; }
+function takenAt(i){ return picked.some(p=>p.slot===i); }
+function candIdx(){
+  let best=0,bestV=1e9;
+  for(let i=0;i<N;i++){ const v=Math.abs(i*STEP+wheelRot); if(v<bestV){bestV=v;best=i;} }
+  return best;
+}
+function layout(){
+  const cards = wheel.querySelectorAll('.card');
+  const c = candIdx();
+  cards.forEach((el,i)=>{
+    const a = angOf(i);
+    const cx = AX - R*Math.cos(a);
+    const cy = AY + R*Math.sin(a);
+    const rot = -(i*STEP + wheelRot);
+    el.style.transform = 'translate('+cx+'px,'+cy+'px) translate(-50%,-50%) rotate('+rot+'deg)';
+    const off = Math.abs(cx) > 900 || Math.abs(cy) > 900;
+    el.style.visibility = off ? 'hidden' : 'visible';
+    el.classList.toggle('pick', i===c && !takenAt(i));
+    el.classList.toggle('taken', takenAt(i));
+  });
+  const m = document.getElementById('mid');
+  if(m){
+    const cm = wheel.querySelectorAll('.card')[c];
+    if(cm){ const t = cm.style.transform.match(/translate\(([-\d.]+)px,([-\d.]+)px\)/);
+      if(t){ m.style.transform = 'translate('+t[1]+'px,'+t[2]+'px) translate(-50%,-50%)'; } }
+  }
+}
+
+/* ---------- 抽牌 ---------- */
+function pick(i){
+  if(picked.length>=3 || takenAt(i)) return;
+  const card = DECK[order[i]];
+  const rev = Math.random() < 0.38;  // 逆位概率 38%（产品调优值：标准塔罗为 50%，下调让逆位成为「少数派提醒」）
+  picked.push({slot:i, card, rev});
+  buzz([12,42,18]);
+  dNum.textContent = String(picked.length);
+  if(picked.length<3){
+    dTitle.textContent = '抽第 ' + (picked.length+1) + ' 张牌';
+    snapFree();
+  }else{
+    dTitle.textContent = '三张抽好了';
+    setTimeout(()=>go('s-read'), 420);
+  }
+}
+function snapFree(){
+  wheelRot = Math.round(wheelRot/STEP)*STEP;
+  let c = candIdx();
+  if(takenAt(c)){
+    for(let k=1;k<=N;k++){
+      const a = Math.round((wheelRot - k*STEP)/STEP)*STEP;
+      const b = Math.round((wheelRot + k*STEP)/STEP)*STEP;
+      if(!takenAt(idxAt(a))){ wheelRot = a; break; }
+      if(!takenAt(idxAt(b))){ wheelRot = b; break; }
+    }
+  }
+  wheel.classList.add('anim'); layout();
+  setTimeout(()=>wheel.classList.remove('anim'), 400);
+}
+function idxAt(rot){
+  let best=0,bestV=1e9;
+  for(let i=0;i<N;i++){ const v=Math.abs(i*STEP+rot); if(v<bestV){bestV=v;best=i;} }
+  return best;
+}
+
+/* ---------- 手势：上下滑转轮 ---------- */
+wheel.addEventListener('pointerdown', e=>{
+  if(picked.length>=3) return;
+  dragging=true; y0=e.clientY; r0=wheelRot; moved=0;
+  wheel.classList.add('drag'); wheel.classList.remove('anim');
+  try{ wheel.setPointerCapture(e.pointerId); }catch(_){}
+});
+wheel.addEventListener('pointermove', e=>{
+  if(!dragging) return;
+  const dy = e.clientY - y0;
+  moved = Math.max(moved, Math.abs(dy));
+  wheelRot = r0 + dy*K;
+  layout();
+});
+function endDrag(){
+  if(!dragging) return;
+  dragging=false; wheel.classList.remove('drag');
+  snapFree();
+  if(moved>4) buzz(6);
+}
+wheel.addEventListener('pointerup', endDrag);
+wheel.addEventListener('pointercancel', endDrag);
+wheel.addEventListener('click', ()=>{
+  if(moved>8){ moved=0; return; }
+  if(picked.length>=3) return;
+  const c = candIdx();
+  if(takenAt(c)) return;
+  pick(c);
+});
+
+/* ---------- 切屏 ---------- */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on','slide-r','slide-l'));
+  const el = document.getElementById(id);
+  void el.offsetWidth;
+  el.classList.add('on','slide-r');
+  if(id==='s-read') renderRead();
+  if(id==='s-draw') initDraw();
+}
+
+/* ---------- 解读页 ---------- */
+let fanActive = 0;
+function renderRead(){
+  const fan = document.getElementById('fan');
+  fan.innerHTML = '';
+  fanActive = 1;                    // 默认把第二张推到前面，方便左右翻
+  if(picked.length===2) fanActive = 0;
+  picked.forEach((p,i)=>{
+    const el = document.createElement('div');
+    el.className = 'fcard';
+    el.innerHTML = '<span class="no">'+p.card.no+'</span><span class="nm">'+p.card.cn+'</span>'+
+                   (p.rev ? '<span class="rv">逆</span>' : '');
+    el.addEventListener('click', ()=>{ fanActive=i; layoutFan(); });
+    fan.appendChild(el);
+  });
+  layoutFan();
+
+  /* 统一的一段话：三句按位置顺序直连 + 末尾一句今日总结 */
+  const sentences = picked.map(p => p.rev ? p.card.rev : p.card.up);
+  const sum = SUMMARIES[Math.floor(Math.random()*SUMMARIES.length)];
+  const para = sentences.join('') + sum;
+  document.getElementById('para').innerHTML = '<span class="cap">牌 给 你 的 话</span>' + para;
+}
+
+function layoutFan(){
+  const cards = document.querySelectorAll('#fan .fcard');
+  cards.forEach((el,i)=>{
+    const d = i - fanActive;
+    const rot = d*11, tx = d*30, ty = -Math.abs(d)*3, sc = 1-Math.abs(d)*0.05;
+    el.style.transform = 'translateX('+tx+'px) rotate('+rot+'deg) translateY('+ty+'px) scale('+sc+')';
+    el.style.zIndex = String(30 - Math.abs(d)*10);
+    el.style.opacity = Math.abs(d)>1 ? '.55' : '1';
+  });
+  const p = picked[fanActive];
+  if(!p) return;
+  document.getElementById('faninfo').innerHTML =
+    '<div class="pos">'+'①②③'[fanActive]+' '+POS[fanActive]+(p.rev?' · 逆位':' · 正位')+'</div>'+
+    '<div class="line">'+p.card.cn+'</div>'+
+    '<div class="kw">'+p.card.kw.join(' · ')+'</div>';
+}
+
+/* 解读页：左右滑翻牌 */
+(function(){
+  const fan = document.getElementById('fan');
+  let sx=0, down=false;
+  fan.addEventListener('pointerdown', e=>{ down=true; sx=e.clientX; });
+  fan.addEventListener('pointerup', e=>{
+    if(!down) return; down=false;
+    const dx = e.clientX - sx;
+    if(Math.abs(dx)<24) return;
+    fanActive = (fanActive + (dx<0?1:-1) + picked.length) % picked.length;
+    layoutFan(); buzz(8);
+  });
+})();
+
+document.getElementById('again').addEventListener('click', ()=>go('s-draw'));
+window.addEventListener('resize', ()=>{ fit(); if(document.getElementById('s-draw').classList.contains('on')){ geom(); layout(); } });
+
+/* 自适应：窗口不够大时整体等比缩小，保证手机框完整可见 */
+function fit(){
+  const s = Math.min(1, (window.innerHeight-20)/820, (window.innerWidth-20)/390);
+  document.querySelector('.frame').style.transform = 'scale('+s+')';
+}
+
+initDraw();
+fit();
+</script>
+</body>
+</html>

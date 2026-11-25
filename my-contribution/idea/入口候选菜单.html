@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>电子衣柜 × AI 玄学搭配 · 策划案</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 48px 24px 96px;
+  background: #F7F7FB; color: #1F2328;
+  font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-size: 15px; line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 900px; margin: 0 auto; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.07);
+        border-radius: 16px; padding: 56px 64px 72px; }
+h1 { font-size: 27px; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.3px; color: #16191D; }
+h2 { font-size: 21px; font-weight: 600; margin: 52px 0 16px; padding-bottom: 10px;
+     border-bottom: 1px solid rgba(0,0,0,0.08); color: #16191D; }
+h3 { font-size: 17px; font-weight: 600; margin: 34px 0 12px; color: #27272A; }
+h4 { font-size: 15px; font-weight: 600; margin: 24px 0 10px; color: #3F3F46; }
+p { margin: 12px 0; }
+a { color: #534AB7; }
+strong { font-weight: 600; color: #16191D; }
+hr { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 44px 0; }
+ul, ol { padding-left: 24px; margin: 12px 0; }
+li { margin: 6px 0; }
+li > p { margin: 4px 0; }
+code { background: #F1EFE8; padding: 2px 6px; border-radius: 5px;
+       font-family: "SF Mono", Consolas, "Cascadia Mono", monospace; font-size: 13px; color: #4A1B0C; }
+pre { background: #F7F7FB; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px;
+      padding: 18px 22px; overflow-x: auto; margin: 18px 0; }
+pre code { background: none; padding: 0; color: #26215C; font-size: 13px; line-height: 1.65; }
+blockquote { margin: 18px 0; padding: 14px 20px; background: #FAEEDA; border-left: 3px solid #BA7517;
+             border-radius: 0 10px 10px 0; color: #412402; }
+blockquote p { margin: 6px 0; }
+blockquote strong { color: #412402; }
+table { border-collapse: collapse; width: 100%; margin: 18px 0; font-size: 14px; }
+th { background: #F7F7FB; font-weight: 600; text-align: left; color: #16191D; }
+th, td { border: 1px solid rgba(0,0,0,0.09); padding: 10px 14px; vertical-align: top; }
+tbody tr:nth-child(even) { background: #FCFCFD; }
+em { color: #5F5E5A; font-style: normal; font-size: 13.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>电子衣柜 · 玄学搭配入口候选菜单</h1>
+<blockquote>
+<p><strong>用途</strong>：给团队横向对比、集体挑选。<strong>不是全部都要做</strong>——48 小时最终只能上 2–3 个入口。
+这份菜单的价值是让「最有感觉的那 2–3 个」被挑出来，而不是全做。</p>
+</blockquote>
+<p><strong>成本说明</strong>：内容成本 = 要写多少条文案；技术成本 = 技术同学要花多少时间。
+<strong>现场观感</strong> = 评委看到时的「哇」程度。</p>
+<hr />
+<h2>一、A 类｜玄学占卜系（被动型：抽到什么就是什么）</h2>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>玩法一句话</th>
+<th>用户操作</th>
+<th>内容成本</th>
+<th>技术成本</th>
+<th>现场观感</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>塔罗牌</strong></td>
+<td>抽一张牌，牌义即今日穿搭指引</td>
+<td>点一下抽牌</td>
+<td>中（22 条）</td>
+<td>低</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td><strong>花语占卜</strong></td>
+<td>抽一朵花，花语 → 色彩与风格</td>
+<td>点一下抽花</td>
+<td>低（12 条）</td>
+<td>低</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td><strong>水晶能量</strong></td>
+<td>选一块水晶，取其能量色系</td>
+<td>6 选 1</td>
+<td>低（6 条）</td>
+<td>低</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td><strong>月相占卜</strong></td>
+<td>按今日月相给出情绪基调与色系</td>
+<td>自动读取</td>
+<td>低（8 条）</td>
+<td>低</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td><strong>中式黄历 · 五行</strong></td>
+<td>今日宜穿什么色（五行补色）</td>
+<td>自动读取</td>
+<td>低</td>
+<td>中（算日干支）</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td><strong>抽签</strong></td>
+<td>摇出一支签，签文即穿搭建议</td>
+<td>摇一摇</td>
+<td>低（20 条）</td>
+<td>低</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td><strong>卢恩符文</strong></td>
+<td>北欧符文占卜，抽一枚</td>
+<td>点一下</td>
+<td>低（24 条）</td>
+<td>低</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td><strong>星座运势</strong></td>
+<td>12 星座今日穿搭倾向</td>
+<td>12 选 1</td>
+<td>低（12 条）</td>
+<td>低</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>易经卦象</td>
+<td>摇卦得卦辞</td>
+<td>点 6 次</td>
+<td>高（卦辞体系重）</td>
+<td>中</td>
+<td>★★★</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>二、B 类｜情绪表达系（反映型：你告诉它你的状态）</h2>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>玩法一句话</th>
+<th>用户操作</th>
+<th>内容成本</th>
+<th>技术成本</th>
+<th>现场观感</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>心情选择</strong></td>
+<td>选一个情绪词，它替你搭配</td>
+<td>8 选 1</td>
+<td>低（8 条）</td>
+<td>低</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td><strong>能量条</strong></td>
+<td>拖一个「今日电量」，决定穿搭强度</td>
+<td>拖滑块</td>
+<td>极低</td>
+<td>极低</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td><strong>内心天气</strong></td>
+<td>用晴 / 多云 / 雨 / 雷表达心情</td>
+<td>4 选 1</td>
+<td>极低（4 条）</td>
+<td>极低</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td><strong>一句话日记</strong></td>
+<td>写一句话，AI 提取情绪再搭配</td>
+<td>输入文本</td>
+<td>无</td>
+<td>中（接 LLM）</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>社交电量</td>
+<td>今天要见几个人 → 决定正式度</td>
+<td>3 选 1</td>
+<td>极低</td>
+<td>极低</td>
+<td>★★★</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>三、C 类｜场景身份系（主动型：你指定今天要成为谁）</h2>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>玩法一句话</th>
+<th>用户操作</th>
+<th>内容成本</th>
+<th>技术成本</th>
+<th>现场观感</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>身份扮演</strong></td>
+<td>今天想当谁？女主角 / 学姐 / 反派 / 隐形人</td>
+<td>4 选 1</td>
+<td>低（6 条）</td>
+<td>低</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td><strong>MBTI</strong></td>
+<td>直接选人格类型 → 穿搭倾向</td>
+<td>16 选 1</td>
+<td>中（16 条）</td>
+<td>低</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td><strong>今日场景</strong></td>
+<td>上课 / 约会 / 面试 / 逛街 / 在家</td>
+<td>5 选 1</td>
+<td>低（5 条）</td>
+<td>极低</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>天气</td>
+<td>自动读天气，决定厚薄与品类</td>
+<td>自动</td>
+<td>无</td>
+<td>中（接 API）</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>BGM 穿搭</td>
+<td>选一首歌，把歌转译成穿搭情绪</td>
+<td>搜索选歌</td>
+<td>低</td>
+<td>中</td>
+<td>★★★★★</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>四、D 类｜游戏机制系（随机型：纯玩、纯爽）</h2>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>玩法一句话</th>
+<th>用户操作</th>
+<th>内容成本</th>
+<th>技术成本</th>
+<th>现场观感</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>盲盒</strong></td>
+<td>随机开一套搭配，开箱动画</td>
+<td>点一下</td>
+<td>无</td>
+<td>低</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td><strong>刮刮乐</strong></td>
+<td>手指刮开涂层才知道今天穿什么</td>
+<td>手指刮</td>
+<td>无</td>
+<td>中（canvas 遮罩）</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td><strong>转盘</strong></td>
+<td>转盘抽风格</td>
+<td>拖动转盘</td>
+<td>无</td>
+<td>低</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>骰子</td>
+<td>扔骰子决定今日风格</td>
+<td>点一下</td>
+<td>无</td>
+<td>极低</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>集卡</td>
+<td>每套搭配收藏成一张卡</td>
+<td>—</td>
+<td>无</td>
+<td>高</td>
+<td>★★★★</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>五、我的推荐分层</h2>
+<blockquote>
+<p><strong>📌 团队初选（2026-09-24）</strong>：A 类加「星座运势、水晶能量」；B 类加「能量条、社交电量」；C 类加「身份扮演、今日场景」；D 类加「刮刮乐、集卡」。</p>
+<p><strong>⚠️ 风控提示</strong>：所选 8 个里，<strong>集卡是唯一被标为「建议放弃」的</strong>——它需要存储和持久化（收藏状态、卡片数据），技术成本高，48 小时内很可能做不完。建议<strong>降级为纯 UI 占位</strong>，或者换成本更低的「转盘」。其余 7 个均可在 2 小时内完成。</p>
+<p><strong>⚠️ 组合检查</strong>：初选 8 个中，被动型 2 个、反映型 2 个、主动型 2 个、随机型 2 个，四类分布非常均衡，good。但请注意这 8 个只是<strong>候选池</strong>，48 小时最终只能上 2–3 个。</p>
+</blockquote>
+<h3>必做（P0，2 个）</h3>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>为什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>塔罗牌</strong></td>
+<td>最有仪式感，视觉最强，且内容已写好（<code>tarot.json</code>）</td>
+</tr>
+<tr>
+<td><strong>心情选择</strong> 或 <strong>能量条</strong></td>
+<td>最贴近用户真实场景。<strong>如果时间紧，选「能量条」</strong>——交互只要一个滑块，5 分钟能做完，现场还很好看</td>
+</tr>
+</tbody>
+</table>
+<h3>强烈推荐（从这四个里再挑 1–2 个）</h3>
+<ul>
+<li><strong>身份扮演</strong> —— 最好玩、最有记忆点，「今天想当反派」这种设定评委会笑出来</li>
+<li><strong>花语占卜</strong> —— 视觉美，女性向极强，内容只要 12 条</li>
+<li><strong>一句话日记</strong> —— 唯一有真「AI 感」的入口，能体现技术含量</li>
+<li><strong>水晶能量</strong> —— 6 条内容、水晶图很美，性价比极高</li>
+</ul>
+<h3>低成本凑数（做 UI 占位最合适）</h3>
+<p>能量条、内心天气、骰子、今日场景、社交电量——都是「10 行代码 + 一张图」的量级，可以全部做成可点但简化的版本。</p>
+<h3>建议放弃</h3>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>易经卦象</td>
+<td>卦辞体系太重，48 小时写不完</td>
+</tr>
+<tr>
+<td>集卡</td>
+<td>涉及存储和持久化，技术成本过高</td>
+</tr>
+<tr>
+<td>BGM 穿搭</td>
+<td>依赖外部歌曲搜索，现场有失败风险</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>六、一个判断入口是否够丰富的框架</h2>
+<p>入口的差异<strong>不在「玄学种类」，而在「决策的颗粒度」</strong>。四类各代表一种心理需求：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>心理需求</th>
+<th>代表入口</th>
+<th>用户感受</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>被动占卜型</td>
+<td>放弃控制权</td>
+<td>塔罗、花语、抽签、水晶</td>
+<td>「这是命运给我的」</td>
+</tr>
+<tr>
+<td>反映型</td>
+<td>被理解</td>
+<td>心情、能量条、日记、内心天气</td>
+<td>「它懂我」</td>
+</tr>
+<tr>
+<td>主动型</td>
+<td>掌控感</td>
+<td>身份扮演、MBTI、场景</td>
+<td>「今天我说了算」</td>
+</tr>
+<tr>
+<td>随机型</td>
+<td>纯玩乐</td>
+<td>盲盒、刮刮乐、转盘、骰子</td>
+<td>「好玩，再来一次」</td>
+</tr>
+</tbody>
+</table>
+<p><strong>一个好的入口组合，应该四类各至少占一个。</strong> 如果六个入口全是"抽卡"，用户两次就腻了。</p>
+<p>用这张表检查你们最终挑出的组合——<strong>同类超过两个，就换掉一个。</strong></p>
+<hr />
+<h2>七、团队怎么选：3 条硬标准</h2>
+<p>让每人给候选入口打分（1–5 分），三条都过关才进候选池：</p>
+<ol>
+<li><strong>现场 5 秒内能出结果吗？</strong> —— 超过 5 秒的入口，Demo 时评委就走神了</li>
+<li><strong>有视觉记忆点吗？</strong> —— 拍下来发朋友圈好看吗？不好看就不值得做</li>
+<li><strong>技术同学 2 小时能做完吗？</strong> —— 超过 2 小时的，48 小时内一定做不完</li>
+</ol>
+<hr />
+<p><em>候选菜单 v1.0 · 2026-09-24</em></p>
+</div>
+</body>
+</html>
